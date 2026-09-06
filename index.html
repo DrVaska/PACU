@@ -34,7 +34,7 @@
 })();
 </script>
 <meta name="color-scheme" content="light dark">
-<title>PACU ტკივილის მართვა v2.70 RC | Dr. Vasil Khachiashvili</title>
+<title>PACU ტკივილის მართვა v2.71 Stable | Dr. Vasil Khachiashvili</title>
 <link href="fonts/fonts.css" rel="stylesheet">
 <style>
 :root {
@@ -8072,6 +8072,18 @@ section[aria-labelledby="h-given"] .given-summary-row {
 
 
 /* ============================================================
+   v2.71 Stable · PACU NRS 6 baseline-reconciliation hotfix (2026-09-06)
+   - Fixes a PACU-specific sequencing defect in which Paracetamol/Ketorolac quick-history entries with a confirmed <6 h exposure but an unresolved exact dose could fail to satisfy the moderate-pain baseline and incorrectly fall through to a Nefopam/physician-review terminal state.
+   - PACU baseline sequencing now distinguishes “received/on board” evidence from exact cumulative-dose quantification: a valid PACU reconciliation exposure can satisfy baseline presence even when mg is unknown, while dose ceilings/repeat-dose safety continue to rely on quantified exposure.
+   - Ward medication-history verification semantics are unchanged. NRS 6 keeps the established Morphine 2–3 mg rescue contract when weight is known; when exact weight is unknown, only the established single initial Morphine 2 mg action is permitted after RR/SpO₂/POSS safety confirmation, with further Morphine blocked until weight is entered.
+   - Opioid STOP thresholds, Nefopam non-routine hierarchy, v19 persistence, print/handover behavior and responsive layout are unchanged.
+
+   v2.70 Stable · Stable release gate · Phase 3 (2026-09-06)
+   - Promotes the validated v2.70 release-candidate line after the complete embedded acceptance suite and final responsive/print/persistence gate passed with no failures.
+   - Includes the desktop-only single-row header consolidation validated across the 1024→1025 breakpoint; mobile/tablet layout remains unchanged.
+   - No clinical treatment rule, ranking, dose, contraindication, STOP/HOLD threshold, Nefopam hierarchy, medication-history semantic, persistence schema, or handover logic is changed in this promotion.
+   - Release metadata/branding moves from release-candidate to stable; state persistence remains on pacu_pain_state_v19 for session compatibility.
+
    v2.70 Release Candidate · Full regression (2026-09-06)
    - No new clinical function or ranking rule is introduced in this release candidate.
    - Adds explicit Morphine exact-age boundary regression at 64/65 years and a direct CrCl/eGFR 30–59 reduced-dose guard; the existing 49/50 kg, unknown-weight first 2 mg, second-dose weight gate, opioid STOP, Nefopam hierarchy, mild-pain reassessment, persistence, responsive and handover/print contracts remain unchanged.
@@ -12669,6 +12681,106 @@ header.app-header.controls-header {
 .rec-morphine-followup-meta { margin-top: 4px; font-size: 12px; font-weight: 650; color: var(--ink-soft); line-height: 1.35; }
 .rec-morphine-followup-card.is-weight-required { background: var(--amber-soft); border-color: rgba(217,119,6,0.30); }
 .rec-morphine-followup-card .rec-weight-required-btn { margin-top: 8px; }
+
+/* v2.70 Phase 2 QA — responsive validation only (2026-09-06).
+   1024↔1025 breakpoint, 1100/1152 narrow desktop, 1280/1440, KA/EN and light/dark passed.
+   No runtime/clinical JavaScript changes in Phase 2. */
+/* ---------- v2.70 Stable · Phase 1 — DESKTOP HEADER CONSOLIDATION ----------
+   Desktop only (>=1025px): merge page identity and utility controls into one
+   compact horizontal header. <=1024px intentionally keeps the validated
+   phone/tablet layout and control geometry unchanged. */
+.desktop-header-shell { display:contents; }
+
+@media (min-width: 1025px) {
+  .desktop-header-shell {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    width:100%;
+    min-width:0;
+    padding:9px 12px 9px 14px;
+    margin:0 0 12px;
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow);
+    transition:background-color var(--transition), border-color var(--transition), box-shadow var(--transition);
+  }
+
+  .desktop-header-shell .page-heading {
+    flex:1 1 auto;
+    min-width:0;
+    margin:0;
+    padding:0;
+  }
+
+  .desktop-header-shell .page-heading .brand-wrapper {
+    width:auto;
+    min-width:0;
+    gap:10px;
+  }
+
+  .desktop-header-shell .page-heading .medical-logo svg,
+  .desktop-header-shell .page-heading .medical-logo .logo-img {
+    height:30px;
+    max-width:118px;
+  }
+
+  .desktop-header-shell .page-heading .brand h1 {
+    font-size:17px;
+    line-height:1.08;
+  }
+
+  .desktop-header-shell > header.app-header.controls-header {
+    flex:0 0 auto;
+    width:auto;
+    min-width:0;
+    display:block;
+    margin:0;
+    padding:0;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+  }
+
+  .desktop-header-shell .controls-header .header-controls {
+    width:auto;
+    display:flex;
+    flex-wrap:nowrap;
+    align-items:center;
+    justify-content:flex-end;
+    gap:8px;
+    overflow:visible;
+  }
+
+  .desktop-header-shell #btn-care-setting-toggle {
+    min-width:70px;
+    height:38px;
+    min-height:38px;
+    padding:0 14px;
+    border-radius:999px;
+    box-shadow:0 1px 2px rgba(15,23,42,.06);
+  }
+
+  .desktop-header-shell #btn-handover,
+  .desktop-header-shell #btn-clear,
+  .desktop-header-shell #btn-theme-toggle {
+    width:38px;
+    min-width:38px;
+    height:38px;
+    min-height:38px;
+    border-radius:12px;
+  }
+
+  .desktop-header-shell .lang-toggle-single #btn-lang-toggle {
+    min-width:52px;
+    height:38px;
+    min-height:38px;
+    padding:0 11px;
+  }
+}
 </style>
 
 <link rel="manifest" href="manifest.webmanifest">
@@ -12694,10 +12806,13 @@ header.app-header.controls-header {
   </div>
 </div>
 <div class="app">
+  <!-- v2.70 Stable Phase 1: desktop-only consolidated identity + utility header.
+       The wrapper is layout-neutral through 1024 px so phone/tablet DOM behavior is unchanged. -->
+  <div class="desktop-header-shell">
   <!-- Page heading + compact controls -->
   <div class="page-heading" aria-label="Application title">
     <div class="brand-wrapper">
-      <div class="medical-logo" role="img" aria-label="DrX · PACU ტკივილის მართვა v2.70 RC · Dr. Vasil Khachiashvili">
+      <div class="medical-logo" role="img" aria-label="DrX · PACU ტკივილის მართვა v2.71 Stable · Dr. Vasil Khachiashvili">
         <svg class="logo-img logo-full" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="-12 16 192 88"><g fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><path d="M0 90 V30 H16 A30 30 0 0 1 16 90 Z"/><g transform="translate(69,0)"><path d="M0 48 V90"/><path d="M0 62 A14 14 0 0 1 14 48"/></g><path d="M118.1 69.9 L98 90"/><path d="M137.9 69.9 L158 90"/></g><path d="M98 30 L128 60 L158 30" stroke="#C8102E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
         <svg class="logo-img logo-mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="18 18 84 84"><g stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M50.1 69.9 L30 90" stroke="currentColor"/><path d="M69.9 69.9 L90 90" stroke="currentColor"/><path d="M30 30 L60 60 L90 30" stroke="#C8102E"/></g></svg>
       </div>
@@ -12736,6 +12851,7 @@ header.app-header.controls-header {
       </div>
     </div>
   </header>
+  </div><!-- /.desktop-header-shell -->
 
   <div class="layout-grid">
     <!-- LEFT COLUMN: inputs -->
@@ -12999,7 +13115,7 @@ header.app-header.controls-header {
   </div>
 
   <div class="footer" data-ui-priority="contextual">
-    <div id="footer-branding">PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili</div>
+    <div id="footer-branding">PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili</div>
     <div><a id="footer-prospect-link" href="https://esraeurope.org/prospect/" target="_blank" rel="noopener">ESRA / PROSPECT რეკომენდაციები ↗</a></div>
     <div class="footer-topge" aria-label="TOP.GE რეიტინგი">
       <!-- TOP.GE ASYNC COUNTER CODE -->
@@ -19870,8 +19986,8 @@ const getChipLabel = (key) => {
 // STATE
 // ============================================================
 // v2.54 Phase 5: recommendation-first disclosure; clinical engine unchanged.
-const APP_VERSION = '2.70 RC';
-const APP_RELEASE_CHANNEL = 'release-candidate';
+const APP_VERSION = '2.71 Stable';
+const APP_RELEASE_CHANNEL = 'stable';
 const CLINICAL_EVIDENCE_REVIEWED_AT = '2026-08-28';
 const STATE_KEY = 'pacu_pain_state_v19'; // v1.47: schema adds given.doseLedger; intentionally unchanged for v2.40 compatibility
 const PREVIOUS_STATE_KEY = 'pacu_pain_state_v18'; // migrated then removed on load
@@ -22582,10 +22698,44 @@ function computeNextBest(input) {
       ledgerEntries(medName, ledger).filter(e => !isUnknownWardHistoryEntry(e));
     const paraBaselineRows = baselineRowsForClinicalSequencing('Paracetamol');
     const ketoBaselineRows = baselineRowsForClinicalSequencing('Ketorolac');
+
+    // v2.71: PACU reconciliation answers two separate questions:
+    //   1) Was the baseline medication received / is there exposure on board?
+    //   2) Is the exact cumulative dose known for cap/repeat-dose arithmetic?
+    // A quick-history assertion may validly answer (1) while leaving (2) unknown
+    // (e.g. exact weight was not entered, so no defensible mg default exists).
+    // Do not let that unknown mg erase factual <6 h exposure and trap NRS 6 below
+    // its established Morphine rescue pathway. Ward history is intentionally
+    // excluded and keeps its dedicated verification semantics.
+    const hasPacuBaselineExposureEvidence = (rows) => (rows || []).some(e => {
+      if (!e || e.voided === true || e.superseded === true || isUnknownWardHistoryEntry(e)) return false;
+      if (e.origin !== LEDGER_ORIGIN_RECONCILIATION || e.source !== 'intraop') return false;
+
+      if (e.timeKnown === true) {
+        const exactAgeMin = minutesSinceIso(e.at);
+        return exactAgeMin != null && exactAgeMin >= 0 && exactAgeMin <= 24 * 60;
+      }
+
+      const recordedAgeMin = minutesSinceIso(e.recordedAt || e.at);
+      const assertedHours = Number(e.assertedWithinHours);
+      // A “received within N h” assertion remains sufficient for the 24 h
+      // baseline-presence question only while the entire asserted window is
+      // guaranteed to remain inside the rolling 24 h horizon.
+      return recordedAgeMin != null && recordedAgeMin >= 0 &&
+        Number.isFinite(assertedHours) && assertedHours > 0 &&
+        recordedAgeMin + assertedHours * 60 <= 24 * 60;
+    });
+
     const hasBaselineLedgerEvidence = ledgerEntries('Paracetamol', ledger).length > 0 || ledgerEntries('Ketorolac', ledger).length > 0;
     if (hasBaselineLedgerEvidence) {
-      paracetamolBaselineOnBoard = ledgerCumulativeSafetyMg('Paracetamol', paraBaselineRows, 24) > 0;
-      ketorolacBaselineOnBoard = ledgerCumulativeSafetyMg('Ketorolac', ketoBaselineRows, 24) > 0;
+      const paraQuantifiedOnBoard = ledgerCumulativeSafetyMg('Paracetamol', paraBaselineRows, 24) > 0;
+      const ketoQuantifiedOnBoard = ledgerCumulativeSafetyMg('Ketorolac', ketoBaselineRows, 24) > 0;
+      const paraReconciledOnBoard = hasPacuBaselineExposureEvidence(paraBaselineRows);
+      const ketoReconciledOnBoard = hasPacuBaselineExposureEvidence(ketoBaselineRows);
+      paracetamolBaselineOnBoard = paraQuantifiedOnBoard || paraReconciledOnBoard;
+      ketorolacBaselineOnBoard = ketoQuantifiedOnBoard || ketoReconciledOnBoard;
+      if (paraReconciledOnBoard && !paraQuantifiedOnBoard) result.debug.pacuParacetamolBaselineDoseUnknownButOnBoard = true;
+      if (ketoReconciledOnBoard && !ketoQuantifiedOnBoard) result.debug.pacuKetorolacBaselineDoseUnknownButOnBoard = true;
     } else {
       paracetamolBaselineOnBoard = !!given.paracetamol;
       ketorolacBaselineOnBoard = !!given.ketorolac;
@@ -34383,7 +34533,7 @@ function runAcceptanceTests() {
   log('Test 485: Georgian persistent-pain disclosure avoids Trigger/STOP mixing and states the rule condition in natural Georgian', /ამ წესის ამოქმედების პირობაა/.test(note485) && !/(Trigger|STOP|ტრიგერი)/i.test(note485), note485);
 
   currentLang='ka'; renderAccessibilityLabels(); const footer486=document.getElementById('footer-branding')?.textContent||'';
-  log('Test 486: footer branding remains intentionally English in Georgian mode', footer486==='PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili', footer486);
+  log('Test 486: footer branding remains intentionally English in Georgian mode', footer486==='PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili', footer486);
 
   // Tests 487–493 — v2.38 Phase 1 evidence provenance architecture.
   const sourceKeys487=Object.keys(prospectData);
@@ -34777,12 +34927,12 @@ function runAcceptanceTests() {
   const enTitle550=document.title;
   const enFooter550=document.getElementById('footer-branding')?.textContent||'';
   log('Test 550: current title/version is consistent and footer branding remains intentionally English in both languages',
-    kaTitle550.includes('v2.70 RC') && enTitle550.includes('v2.70 RC') &&
-    kaFooter550==='PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili' && enFooter550===kaFooter550,
+    kaTitle550.includes('v2.71 Stable') && enTitle550.includes('v2.71 Stable') &&
+    kaFooter550==='PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili' && enFooter550===kaFooter550,
     JSON.stringify({kaTitle:kaTitle550,enTitle:enTitle550,kaFooter:kaFooter550,enFooter:enFooter550}));
 
-  log('Test 551: current RC metadata preserves the v19-compatible storage schema',
-    APP_VERSION==='2.70 RC' && APP_RELEASE_CHANNEL==='release-candidate' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
+  log('Test 551: current Stable metadata preserves the v19-compatible storage schema',
+    APP_VERSION==='2.71 Stable' && APP_RELEASE_CHANNEL==='stable' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
     JSON.stringify({version:APP_VERSION,channel:APP_RELEASE_CHANNEL,stateKey:STATE_KEY,previousKey:PREVIOUS_STATE_KEY}));
 
   // Current-state round trip: Ward coarse history + structured regional record survive;
@@ -35518,7 +35668,7 @@ function runAcceptanceTests() {
     document.getElementById('given-edit-body')?.className||'missing');
 
   log('Test 688: release metadata preserves the v19-compatible storage schema',
-    APP_VERSION==='2.70 RC' && APP_RELEASE_CHANNEL==='release-candidate' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
+    APP_VERSION==='2.71 Stable' && APP_RELEASE_CHANNEL==='stable' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
     JSON.stringify({version:APP_VERSION,channel:APP_RELEASE_CHANNEL,stateKey:STATE_KEY,previousKey:PREVIOUS_STATE_KEY}));
 
   // Tests 689–691, 693–695 — v2.54 Phase 2 workflow compression + NRS-always-visible refinement.
@@ -35961,9 +36111,9 @@ function runAcceptanceTests() {
 
   // Tests 764–771 — v2.54 Ward Final QA / release-contract regression.
   state=defaultState(); currentLang='ka'; renderAll();
-  log('Test 764: current RC build preserves v19 persistence and active UI-state compatibility keys',
-    APP_VERSION==='2.70 RC' &&
-    APP_RELEASE_CHANNEL==='release-candidate' &&
+  log('Test 764: current Stable build preserves v19 persistence and active UI-state compatibility keys',
+    APP_VERSION==='2.71 Stable' &&
+    APP_RELEASE_CHANNEL==='stable' &&
     STATE_KEY==='pacu_pain_state_v19' &&
     PREVIOUS_STATE_KEY==='pacu_pain_state_v18' &&
     Object.prototype.hasOwnProperty.call(defaultState().ui,'converterCollapsed') &&
@@ -36580,7 +36730,7 @@ function runAcceptanceTests() {
 
   currentLang='ka'; renderContextualAppIdentity();
   log('Test 865: v2.60.5 footer branding remains intentionally English in Georgian mode',
-    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili',
+    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili',
     document.getElementById('footer-branding')?.textContent||'missing');
 
   const deadKa865=['given_text_unrecognized','given_check_basic','given_check_safety_group','baseline_note_nonprospect'];
@@ -36696,7 +36846,7 @@ function runAcceptanceTests() {
   state.careSetting='pacu'; currentLang='ka'; renderCareSetting(); renderContextualAppIdentity();
   log('Test 822: switching back to PACU restores PACU identity without changing product footer branding',
     document.getElementById('app-title')?.textContent==='PACU ტკივილის მართვა' &&
-    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili',
+    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili',
     JSON.stringify({header:document.getElementById('app-title')?.textContent,footer:document.getElementById('footer-branding')?.textContent}));
 
   state=defaultState(); currentLang='ka';
@@ -36718,9 +36868,9 @@ function runAcceptanceTests() {
 
   // Tests 825–834 — v2.54 Final Regression Phase 6.
   const release825=window.App?.releaseInfo?.() || {version:APP_VERSION,channel:APP_RELEASE_CHANNEL,stateKey:STATE_KEY};
-  log('Test 825: v2.70 RC release contract preserves the validated base while preserving v19 persistence compatibility',
-    APP_VERSION==='2.70 RC' && APP_RELEASE_CHANNEL==='release-candidate' && STATE_KEY==='pacu_pain_state_v19' &&
-    release825.version==='2.70 RC' && release825.channel==='release-candidate' && release825.stateKey==='pacu_pain_state_v19',
+  log('Test 825: v2.70 Stable release contract preserves the validated base while preserving v19 persistence compatibility',
+    APP_VERSION==='2.71 Stable' && APP_RELEASE_CHANNEL==='stable' && STATE_KEY==='pacu_pain_state_v19' &&
+    release825.version==='2.71 Stable' && release825.channel==='stable' && release825.stateKey==='pacu_pain_state_v19',
     JSON.stringify(release825));
 
   state=defaultState(); currentLang='ka'; hvPrefillFromState({force:true});
@@ -37458,7 +37608,7 @@ function runAcceptanceTests() {
   const m939Patient={...state.patient,ileus:true}; const m939=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:[],lastOpioidBucket:null,safety:{...defaultState().safety},patient:m939Patient,careSetting:'ward'});
   log('Test 939: v2.69 ileus never exposes unknown-weight Morphine preview',m939.debug.pendingUnknownWeightInitialMorphineSafety!==true,JSON.stringify({debug:m939.debug,blocked:m939.blocked.map(x=>x.name)}));
 
-  // Tests 940–942 — v2.70 RC explicit Morphine release-boundary guards.
+  // Tests 940–942 — v2.70 Stable explicit Morphine release-boundary guards.
   const morphineDoseFromResult940 = (result) => {
     const direct = result.ranked.find(x=>x.name==='Morphine');
     if (direct) return direct.dose || '';
@@ -37470,14 +37620,72 @@ function runAcceptanceTests() {
   };
   const m940Base={...defaultState().patient,weightKg:70,weight_low:false,crcl_mid:false,crcl_low:false,renal_dysfunction:false,renalBand:'ge60'};
   const m940=computeNextBest({surgery:'chole',nrs:8,given:{...defaultState().given,medicationCheckStatus:'selected'},ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:{...m940Base,ageYears:64,age65:false},careSetting:'pacu'});
-  log('Test 940: v2.70 RC age 64 stays on the standard Morphine 3–5 mg branch',/3[–-]5/.test(morphineDoseFromResult940(m940)),morphineDoseFromResult940(m940));
+  log('Test 940: v2.70 Stable age 64 stays on the standard Morphine 3–5 mg branch',/3[–-]5/.test(morphineDoseFromResult940(m940)),morphineDoseFromResult940(m940));
 
   const m941=computeNextBest({surgery:'chole',nrs:8,given:{...defaultState().given,medicationCheckStatus:'selected'},ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:{...m940Base,ageYears:65,age65:true},careSetting:'pacu'});
-  log('Test 941: v2.70 RC exact age 65 enters the reduced Morphine 2–3 mg branch',/2[–-]3/.test(morphineDoseFromResult940(m941)),morphineDoseFromResult940(m941));
+  log('Test 941: v2.70 Stable exact age 65 enters the reduced Morphine 2–3 mg branch',/2[–-]3/.test(morphineDoseFromResult940(m941)),morphineDoseFromResult940(m941));
 
   const m942Patient={...m940Base,ageYears:55,age65:false,crcl_mid:true,renal_dysfunction:true,renalBand:'mid'};
   const m942=computeNextBest({surgery:'chole',nrs:8,given:{...defaultState().given,medicationCheckStatus:'selected'},ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:m942Patient,careSetting:'pacu'});
-  log('Test 942: v2.70 RC CrCl/eGFR 30–59 preserves the reduced Morphine 2–3 mg branch',/2[–-]3/.test(morphineDoseFromResult940(m942)),morphineDoseFromResult940(m942));
+  log('Test 942: v2.70 Stable CrCl/eGFR 30–59 preserves the reduced Morphine 2–3 mg branch',/2[–-]3/.test(morphineDoseFromResult940(m942)),morphineDoseFromResult940(m942));
+
+  // Tests 943–949 — v2.71 PACU NRS 6 baseline-reconciliation hotfix.
+  // Reproduce the bedside scenario: age known, weight unknown, PACU NRS 6,
+  // Paracetamol + Ketorolac + Metamizole + Nefopam quick-marked as received <6 h.
+  // Paracetamol/Ketorolac therefore have factual exposure but intentionally no mg.
+  state=defaultState(); currentLang='ka'; state.careSetting='pacu'; state.surgery='chole'; state.nrs=6;
+  state.patient.ageYears=55; state.patient.age65=false; state.patient.weightKg=null; state.patient.weight_low=false;
+  state.given.medicationCheckStatus='pending_selected';
+  toggleQuickMedication('paracetamol'); toggleQuickMedication('ketorolac'); toggleQuickMedication('metamizole'); toggleQuickMedication('nefopam');
+  const v271Ledger=ensureDoseLedger().map(e=>({...e}));
+  const v271Para=v271Ledger.find(e=>e.med==='Paracetamol');
+  const v271Keto=v271Ledger.find(e=>e.med==='Ketorolac');
+  const v271Pending=computeNextBest({surgery:'chole',nrs:6,given:state.given,ledger:v271Ledger,lastOpioidBucket:null,safety:{...defaultState().safety},patient:state.patient,careSetting:'pacu'});
+  log('Test 943: v2.71 target PACU quick-history keeps Paracetamol/Ketorolac exposure on board even when exact mg is unresolved',
+    v271Para?.doseKnown===false && v271Keto?.doseKnown===false &&
+    v271Pending.debug.moderateBaseline?.resolved===true &&
+    v271Pending.debug.pacuParacetamolBaselineDoseUnknownButOnBoard===true &&
+    v271Pending.debug.pacuKetorolacBaselineDoseUnknownButOnBoard===true,
+    JSON.stringify({para:v271Para&&{doseKnown:v271Para.doseKnown,mg:v271Para.mg,assertedWithinHours:v271Para.assertedWithinHours},keto:v271Keto&&{doseKnown:v271Keto.doseKnown,mg:v271Keto.mg,assertedWithinHours:v271Keto.assertedWithinHours},debug:v271Pending.debug}));
+
+  log('Test 944: v2.71 target PACU NRS6 routes to Morphine safety checkpoint, not Nefopam/physician HOLD',
+    v271Pending.debug.nrs6MorphineRescuePathway===true && v271Pending.debug.needSafetyGate===true &&
+    v271Pending.debug.pendingUnknownWeightInitialMorphineSafety===true &&
+    !v271Pending.nonRoutineFallback && !v271Pending.physicianEscalation && v271Pending.holds.length===0,
+    JSON.stringify({debug:v271Pending.debug,fallback:v271Pending.nonRoutineFallback,escalation:v271Pending.physicianEscalation,holds:v271Pending.holds}));
+
+  const v271Safe=computeNextBest({surgery:'chole',nrs:6,given:state.given,ledger:v271Ledger,lastOpioidBucket:null,safety:freshSafeSafety(),patient:state.patient,careSetting:'pacu'});
+  const v271Morph=v271Safe.ranked.find(x=>x.name==='Morphine');
+  log('Test 945: v2.71 target PACU NRS6 + safe opioid gate makes the single unknown-weight Morphine 2 mg action primary',
+    v271Safe.debug.nrs6MorphineRescuePathway===true && v271Safe.ranked[0]?.name==='Morphine' && /^2\s*(?:მგ|mg)/i.test(v271Morph?.dose||'') &&
+    !v271Safe.physicianEscalation && v271Safe.holds.length===0,
+    JSON.stringify({ranked:v271Safe.ranked.map(x=>({name:x.name,dose:x.dose})),debug:v271Safe.debug,holds:v271Safe.holds}));
+
+  const v271UnsafeCases=[
+    {name:'RR<10',safety:{...freshSafeSafety(),rr:9}},
+    {name:'SpO₂<92',safety:{...freshSafeSafety(),spo2:91}},
+    {name:'POSS≥3',safety:{...freshSafeSafety(),poss:'3'}}
+  ].map(c=>({name:c.name,result:computeNextBest({surgery:'chole',nrs:6,given:state.given,ledger:v271Ledger,lastOpioidBucket:null,safety:c.safety,patient:state.patient,careSetting:'pacu'})}));
+  log('Test 946: v2.71 RR<10 / SpO₂<92 / POSS≥3 semantics remain hard opioid STOPs in the target scenario',
+    v271UnsafeCases.every(c=>!c.result.ranked.some(x=>x.name==='Morphine') && c.result.stops.length>0),
+    JSON.stringify(v271UnsafeCases.map(c=>({name:c.name,ranked:c.result.ranked.map(x=>x.name),stops:c.result.stops,holds:c.result.holds}))));
+
+  const v271P49={...state.patient,weightKg:49,weight_low:true};
+  const v271Known49=computeNextBest({surgery:'chole',nrs:6,given:state.given,ledger:v271Ledger,lastOpioidBucket:null,safety:freshSafeSafety(),patient:v271P49,careSetting:'pacu'});
+  log('Test 947: v2.71 known 49 kg target scenario stays on the established NRS6 Morphine 2–3 mg rescue dose',
+    v271Known49.ranked[0]?.name==='Morphine' && /2[–-]3/.test(v271Known49.ranked[0]?.dose||''),
+    JSON.stringify(v271Known49.ranked.map(x=>({name:x.name,dose:x.dose}))));
+
+  const v271P50={...state.patient,weightKg:50,weight_low:false};
+  const v271Known50=computeNextBest({surgery:'chole',nrs:6,given:state.given,ledger:v271Ledger,lastOpioidBucket:null,safety:freshSafeSafety(),patient:v271P50,careSetting:'pacu'});
+  log('Test 948: v2.71 known 50 kg target scenario preserves the dedicated NRS6 Morphine 2–3 mg contract (not the severe-pain 3–5 mg branch)',
+    v271Known50.ranked[0]?.name==='Morphine' && /2[–-]3/.test(v271Known50.ranked[0]?.dose||''),
+    JSON.stringify(v271Known50.ranked.map(x=>({name:x.name,dose:x.dose}))));
+
+  const v271N5=computeNextBest({surgery:'chole',nrs:5,given:{...state.given,nefopam:false},ledger:v271Ledger.filter(e=>e.med!=='Nefopam'),lastOpioidBucket:null,safety:freshSafeSafety(),patient:state.patient,careSetting:'pacu'});
+  log('Test 949: v2.71 Nefopam remains a non-routine rescue rung when eligible; the hotfix does not promote it into routine ranking',
+    !v271N5.ranked.some(x=>x.name==='Nefopam') && v271N5.nonRoutineFallback?.name==='Nefopam',
+    JSON.stringify({ranked:v271N5.ranked.map(x=>x.name),fallback:v271N5.nonRoutineFallback,hierarchy:v271N5.debug.rescueHierarchy}));
 
   state=stateBefore550; currentLang=langBefore550; renderAll();
 
@@ -37728,7 +37936,7 @@ function init() {
   window.App.getSessionOwnershipStatus = getSessionOwnershipStatus;
   window.App.printPreflight = () => hvLastPrintPreflight;
   maybeRunSelfTest();
-  debugLog('[PACU] v2.70 RC full-regression build initialized. Run App.runAcceptanceTests(), App.runLayoutSmokeTests(), or add ?selftest=1 to QA.');
+  debugLog('[PACU] v2.71 Stable build initialized. Run App.runAcceptanceTests(), App.runLayoutSmokeTests(), or add ?selftest=1 to QA.');
 }
 
 return { init };
