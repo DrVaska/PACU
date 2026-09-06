@@ -34,10 +34,8 @@
 })();
 </script>
 <meta name="color-scheme" content="light dark">
-<title>PACU ტკივილის მართვა v2.67 | დოქტორი ვასილ ხაჩიაშვილი</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Georgian:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>PACU ტკივილის მართვა v2.70 RC | Dr. Vasil Khachiashvili</title>
+<link href="fonts/fonts.css" rel="stylesheet">
 <style>
 :root {
   /* Colors */
@@ -8074,6 +8072,24 @@ section[aria-labelledby="h-given"] .given-summary-row {
 
 
 /* ============================================================
+   v2.70 Release Candidate · Full regression (2026-09-06)
+   - No new clinical function or ranking rule is introduced in this release candidate.
+   - Adds explicit Morphine exact-age boundary regression at 64/65 years and a direct CrCl/eGFR 30–59 reduced-dose guard; the existing 49/50 kg, unknown-weight first 2 mg, second-dose weight gate, opioid STOP, Nefopam hierarchy, mild-pain reassessment, persistence, responsive and handover/print contracts remain unchanged.
+   - Final RC regression: 946/946 embedded acceptance PASS; 28/28 targeted high-risk semantic checks PASS; 360/390/600/768/1024/1440 px × light/dark layout matrix PASS; print/handover 43/43 PASS; persistence/hydration 30/30 PASS; 0 browser page errors.
+   - Release channel is release-candidate; state persistence stays on pacu_pain_state_v19 for compatibility.
+   - This artifact is intentionally labeled RC, not Stable.
+
+   v2.69 · Morphine state/UI integration + edge cases (2026-09-06)
+   - Integrates the v2.68 unknown-weight 2 mg Morphine rule across pending-safety, actionable, post-dose reassessment, and additional-dose states.
+   - A pending opioid-safety gate can preview the intended Morphine 2 mg IV rescue without making it actionable; after the recorded initial 2 mg dose, the UI uses the established 10-minute reassessment window before any further titration.
+   - The initial unknown-weight Morphine event is explicitly tagged in the factual ledger so follow-up UI never guesses from dose alone. Additional Morphine after an inadequate response requires exact weight; known weight returns to the established <50 kg reduced and ≥50 kg standard branches.
+   - Clinical STOPs, ileus/renal blocks, PACU/Ward history semantics, opioid safety thresholds, and v19 persistence remain unchanged.
+
+   v2.68 · Unknown-weight Morphine initial rescue (2026-09-06)
+   - When Morphine is the current rescue option and exact weight is unavailable, a single 2 mg slow-IV initial rescue may become actionable after the existing opioid RR/SpO₂/POSS safety gate.
+   - The 2 mg action is allowed only before any Morphine administration in the active medication-history window; any additional Morphine with weight still unknown requires exact weight, preventing a repeated 2 mg loop.
+   - Existing hard opioid STOPs, ileus/renal restrictions, recent-opioid timing, exposure guards, and known-weight 2–3 mg / 3–5 mg branches remain unchanged.
+
    v2.67 · Mild-pain reassessment semantics (2026-09-06)
    - NRS 1–3 with completed core workflow, no true STOP/surgical concern, no active-treatment/history/safety prerequisite and no actionable immediate rescue now resolves to a 30-minute reassessment state rather than generic HOLD / physician review.
    - The primary surface states that no additional analgesia is needed at this stage; the mobile action surface mirrors “Reassess in 30 min”. NRS >=4 pathways, Nefopam fallback, STOPs, dose/interval rules, PACU/Ward semantics and v19 persistence remain unchanged.
@@ -12622,8 +12638,46 @@ header.app-header.controls-header {
   }
   .page-heading .brand h1 { font-size:15px !important; }
 }
+
+/* v2.68 — unknown-weight Morphine initial rescue */
+.rec-morphine-more-dose-weight {
+  margin-top: 8px;
+  padding: 7px 9px;
+  border-radius: 10px;
+  background: var(--paper-soft, rgba(148,163,184,0.08));
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+/* v2.69 — unified unknown-weight Morphine pathway */
+.rec-pending-morphine-preview,
+.rec-morphine-followup-card {
+  border: 1px solid rgba(8,145,178,0.24);
+  border-radius: 12px;
+  background: var(--accent-soft);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.rec-pending-morphine-preview { margin-bottom: 10px; }
+.rec-pending-morphine-name,
+.rec-morphine-followup-name { font-size: 16px; font-weight: 800; color: var(--ink); }
+.rec-pending-morphine-dose,
+.rec-morphine-followup-main { margin-top: 2px; font-size: 14px; font-weight: 800; color: var(--accent-strong); }
+.rec-pending-morphine-meta,
+.rec-morphine-followup-meta { margin-top: 4px; font-size: 12px; font-weight: 650; color: var(--ink-soft); line-height: 1.35; }
+.rec-morphine-followup-card.is-weight-required { background: var(--amber-soft); border-color: rgba(217,119,6,0.30); }
+.rec-morphine-followup-card .rec-weight-required-btn { margin-top: 8px; }
 </style>
 
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="PACU ტკივილი">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
 </head>
 
 <body>
@@ -12643,7 +12697,7 @@ header.app-header.controls-header {
   <!-- Page heading + compact controls -->
   <div class="page-heading" aria-label="Application title">
     <div class="brand-wrapper">
-      <div class="medical-logo" role="img" aria-label="DrX · PACU ტკივილის მართვა v2.67 · დოქტორი ვასილ ხაჩიაშვილი">
+      <div class="medical-logo" role="img" aria-label="DrX · PACU ტკივილის მართვა v2.70 RC · Dr. Vasil Khachiashvili">
         <svg class="logo-img logo-full" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="-12 16 192 88"><g fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><path d="M0 90 V30 H16 A30 30 0 0 1 16 90 Z"/><g transform="translate(69,0)"><path d="M0 48 V90"/><path d="M0 62 A14 14 0 0 1 14 48"/></g><path d="M118.1 69.9 L98 90"/><path d="M137.9 69.9 L158 90"/></g><path d="M98 30 L128 60 L158 30" stroke="#C8102E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
         <svg class="logo-img logo-mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="18 18 84 84"><g stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M50.1 69.9 L30 90" stroke="currentColor"/><path d="M69.9 69.9 L90 90" stroke="currentColor"/><path d="M30 30 L60 60 L90 30" stroke="#C8102E"/></g></svg>
       </div>
@@ -12945,7 +12999,7 @@ header.app-header.controls-header {
   </div>
 
   <div class="footer" data-ui-priority="contextual">
-    <div id="footer-branding">PACU Pain Management v2.67 | By Dr. Vasil Khachiashvili</div>
+    <div id="footer-branding">PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili</div>
     <div><a id="footer-prospect-link" href="https://esraeurope.org/prospect/" target="_blank" rel="noopener">ESRA / PROSPECT რეკომენდაციები ↗</a></div>
     <div class="footer-topge" aria-label="TOP.GE რეიტინგი">
       <!-- TOP.GE ASYNC COUNTER CODE -->
@@ -17640,6 +17694,7 @@ function recordExactAdministration(medName, dose, unit, route, atIso, options = 
     mg: exactDoseToMg(n, unit || 'mg'), route: route || '', at: new Date(parsed).toISOString(),
     source, origin, exact: true, doseKnown:true, timeKnown:true, recordedAt:new Date().toISOString(),
     prePainScore, prePainSource, prePainObserved,
+    initialUnknownWeightMorphine: medName === 'Morphine' && options.initialUnknownWeightMorphine === true,
     response: null, responsePainScore: null, responsePainSource: null, responseAt: null,
     supersededReconciliationIds
   };
@@ -17705,7 +17760,8 @@ function replaceExactAdministration(entryId, medName, dose, unit, route, atIso, 
   const newEntry = recordExactAdministration(medName, dose, unit, route, atIso, {
     source: newSource,
     origin: LEDGER_ORIGIN_PACU,
-    supersedeReconciliation: allowWardClarification
+    supersedeReconciliation: allowWardClarification,
+    initialUnknownWeightMorphine: oldEntry.initialUnknownWeightMorphine === true && medName === 'Morphine'
   });
   if (!newEntry) return null;
 
@@ -19814,8 +19870,8 @@ const getChipLabel = (key) => {
 // STATE
 // ============================================================
 // v2.54 Phase 5: recommendation-first disclosure; clinical engine unchanged.
-const APP_VERSION = '2.67';
-const APP_RELEASE_CHANNEL = 'development';
+const APP_VERSION = '2.70 RC';
+const APP_RELEASE_CHANNEL = 'release-candidate';
 const CLINICAL_EVIDENCE_REVIEWED_AT = '2026-08-28';
 const STATE_KEY = 'pacu_pain_state_v19'; // v1.47: schema adds given.doseLedger; intentionally unchanged for v2.40 compatibility
 const PREVIOUS_STATE_KEY = 'pacu_pain_state_v18'; // migrated then removed on load
@@ -21122,8 +21178,50 @@ const recommendationWeightSensitiveMeds = (item, patient = state.patient) => {
   else push(item.name);
   return names;
 };
-const recommendationRequiresExactWeight = (item, patient = state.patient) =>
-  recommendationWeightSensitiveMeds(item, patient).length > 0;
+const recommendationRequiresExactWeight = (item, patient = state.patient, options = {}) => {
+  const meds = recommendationWeightSensitiveMeds(item, patient);
+  if (options.allowUnknownWeightInitialMorphine === true && isUnknownWeightInitialMorphineRescueAvailable(patient)) {
+    return meds.some(name => name !== 'Morphine');
+  }
+  return meds.length > 0;
+};
+
+function hasMorphineAdministrationInActiveWindow(ledger = ensureDoseLedger(), careSetting = state.careSetting) {
+  return ledgerEntries('Morphine', ledger).some(entry => isMedicationHistoryEntryInActiveWindow(entry, careSetting));
+}
+
+function isUnknownWeightInitialMorphineRescueAvailable(patient = state.patient, ledger = ensureDoseLedger(), careSetting = state.careSetting, painScore = state?.nrs) {
+  if (getExactPatientWeightKg(patient) != null || patient?.weight_low === true) return false;
+  const pain = Number(painScore);
+  if (!Number.isFinite(pain) || pain < 5 || pain > 9) return false;
+  return !hasMorphineAdministrationInActiveWindow(ledger, careSetting);
+}
+
+function getUnknownWeightInitialMorphineDoseLabel() {
+  return currentLang === 'ka' ? '2 მგ IV' : '2 mg IV';
+}
+
+function isUnknownWeightInitialMorphineDoseText(medName, doseText = '') {
+  if (String(medName || '').trim() !== 'Morphine') return false;
+  if (!isUnknownWeightInitialMorphineRescueAvailable()) return false;
+  return /^\s*2\s*(?:მგ|mg)(?:\s|·|$)/i.test(String(doseText || ''));
+}
+
+function getUnknownWeightInitialMorphineFollowupState(patient = state.patient, ledger = ensureDoseLedger(), careSetting = state.careSetting) {
+  if (getExactPatientWeightKg(patient) != null || patient?.weight_low === true) return null;
+  const latest = ledgerEntries('Morphine', ledger)
+    .filter(entry => entry?.initialUnknownWeightMorphine === true && isMedicationHistoryEntryInActiveWindow(entry, careSetting) && entry?.at)
+    .slice()
+    .sort((a,b) => Date.parse(b.at || 0) - Date.parse(a.at || 0))[0];
+  if (!latest) return null;
+  const ageMin = minutesSinceIso(latest.at);
+  if (!Number.isFinite(ageMin) || ageMin < 0) return null;
+  const reassessMin = 10;
+  if (ageMin < reassessMin) return { code:'wait_after_initial_2mg', entryId:latest.id, ageMin, reassessMin, remainingMin:Math.max(1, Math.ceil(reassessMin-ageMin)), response:latest.response||null };
+  if (latest.response === 'insufficient') return { code:'weight_required_for_more', entryId:latest.id, ageMin, reassessMin, remainingMin:0, response:'insufficient' };
+  if (latest.response === 'effective') return null;
+  return { code:'reassess_due', entryId:latest.id, ageMin, reassessMin, remainingMin:0, response:null };
+}
 
 const isOutsideAdultScope = (patient = state.patient) => {
   const age = getExactPatientAgeYears(patient);
@@ -21560,7 +21658,7 @@ function isReducedMorphinePath(patient = state?.patient || {}) {
   return !!(patient.age65 || patient.weight_low || patient.crcl_mid);
 }
 function getMorphineInfusionInfoText(patient = state?.patient || {}) {
-  const reduced = isReducedMorphinePath(patient) || isModeratePainMorphineRescueContext();
+  const reduced = isReducedMorphinePath(patient) || isModeratePainMorphineRescueContext() || isUnknownWeightInitialMorphineRescueAvailable(patient);
   if (currentLang === 'ka') {
     return reduced
       ? 'ადგილობრივი კლინიკური წესი: დაიწყე 2 მგ-ით. 2 მგ განაზავე 100 მლ NaCl 0.9%-ში და დაიწყე ნელი IV ინფუზია. ინფუზიის სიჩქარე/ხანგრძლივობა — ადგილობრივი კლინიკური წესის ან ექიმის მითითებით. განზავების გარეშე გამოიყენე მხოლოდ ექიმის უშუალო მეთვალყურეობით; მოერიდე სწრაფ IV ბოლუსს.'
@@ -21571,6 +21669,7 @@ function getMorphineInfusionInfoText(patient = state?.patient || {}) {
     : 'Local clinical rule: dilute the selected dose from the recommended 3–5 mg range in 100 mL NaCl 0.9% and start a slow IV infusion. Infusion rate/duration follows the local clinical rule or physician instruction. Use undiluted only under direct physician supervision; avoid rapid IV bolus.';
 }
 function getWeightAwareDoseDisplayText(medName, doseText, patient = state.patient) {
+  if (medName === 'Morphine' && isUnknownWeightInitialMorphineDoseText(medName, doseText)) return String(doseText || '');
   if (!medicationRequiresExactWeight(medName, patient)) return String(doseText || '');
   if (medName === 'Paracetamol') return currentLang === 'ka' ? 'დოზა წონაზეა დამოკიდებული — მიუთითე წონა' : 'Dose depends on weight — enter weight';
   if (medName === 'Ketorolac') return currentLang === 'ka' ? '15 ან 30 მგ IV — მიუთითე წონა' : '15 or 30 mg IV — enter weight';
@@ -22195,6 +22294,7 @@ function computeNextBest(input) {
     nonRoutineFallback: null,
     physicianEscalation: null,
     mildReassessment: null,
+    morphineInitialRescueFollowup: null,
     activeTreatment: [],
     temporalPathway: null,
     escalation: null,
@@ -22927,6 +23027,13 @@ function computeNextBest(input) {
     }
 
     if (blockReasons.length > 0) {
+      const safetyOnlyPendingOpioid = (medKey === 'Morphine' || medKey === 'Fentanyl') &&
+        !isOpioidGateSafe(safety) && !isOpioidGateUnsafe(safety) &&
+        blockReasons.length === 1 && blockReasons[0] === t('reason_safety_gate') && score > 0;
+      if (safetyOnlyPendingOpioid) {
+        result.debug.pendingOpioidCandidates = result.debug.pendingOpioidCandidates || [];
+        result.debug.pendingOpioidCandidates.push({ name:medKey, score, dose: medKey === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs) ? getUnknownWeightInitialMorphineDoseLabel() : getDoseLabel(medKey, patient, given, safety) });
+      }
       const wardState = careSetting === 'ward' ? wardMedicationStates?.[medKey] : null;
       const wardTimingReason = careSetting === 'ward' ? recentDoseBlockReason(medKey, ledger) : null;
       const nonTimingBlockReasons = wardTimingReason ? blockReasons.filter(reason => reason !== wardTimingReason) : [...blockReasons];
@@ -22963,9 +23070,11 @@ function computeNextBest(input) {
       const recommendation = {
         name: medKey,
         score: score,
-        dose: (medKey === 'Morphine' && (nrs6MorphineRescuePathway || wardNrs5MorphineAfterMetamizoleFailure))
-          ? getModeratePainMorphineDoseLabel()
-          : getDoseLabel(medKey, patient, given, safety),
+        dose: (medKey === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs))
+          ? getUnknownWeightInitialMorphineDoseLabel()
+          : ((medKey === 'Morphine' && (nrs6MorphineRescuePathway || wardNrs5MorphineAfterMetamizoleFailure))
+            ? getModeratePainMorphineDoseLabel()
+            : getDoseLabel(medKey, patient, given, safety)),
         interval: getIntervalLabel(medKey),
         why: (medKey === 'Morphine' && wardNrs5MorphineAfterMetamizoleFailure)
           ? (currentLang === 'ka'
@@ -22975,6 +23084,9 @@ function computeNextBest(input) {
         tooltip: getMedTooltip(medKey),
         conditional
       };
+      if (medKey === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs)) {
+        result.debug.unknownWeightInitialMorphineRescue = true;
+      }
       const evidencePolicy = getProcedureMedicationEvidencePolicy(surgery, medKey);
       if (evidencePolicy?.status === 'not_routine_evidence') {
         // Procedure evidence changes routine ranking, NOT pharmacologic eligibility.
@@ -23120,7 +23232,9 @@ function computeNextBest(input) {
         scored.push({
           name: 'Morphine',
           score: 95,
-          dose: getModeratePainMorphineDoseLabel(),
+          dose: isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting)
+            ? getUnknownWeightInitialMorphineDoseLabel()
+            : getModeratePainMorphineDoseLabel(),
           interval: getIntervalLabel('Morphine'),
           why: currentLang === 'ka'
             ? 'ადგილობრივი კლინიკური წესი — NRS 5 და სტანდარტული არაოპიოიდური rescue უკვე გამოყენებულია → Morphine 2–3 მგ'
@@ -23230,6 +23344,17 @@ ${topOpioidForCombo.name}: ${topOpioidForCombo.tooltip}`,
   }
 
 
+
+  // v2.69: keep the intended unknown-weight Morphine 2 mg visible while the
+  // RR/SpO₂/POSS gate is still pending, without making it actionable.
+  const pendingOpioids = Array.isArray(result.debug.pendingOpioidCandidates) ? result.debug.pendingOpioidCandidates.slice().sort((a,b)=>b.score-a.score) : [];
+  const pendingMorphine = pendingOpioids.find(x => x.name === 'Morphine');
+  const morphineSpecificPendingPath = !!(nrs6MorphineRescuePathway || wardNrs5MorphineAfterMetamizoleFailure || nrs5ExhaustedNonOpioidRescuePathway);
+  const prospectiveTopOpioid = morphineSpecificPendingPath && pendingMorphine ? pendingMorphine : pendingOpioids[0];
+  if (result.debug.needSafetyGate && prospectiveTopOpioid?.name === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs)) {
+    result.debug.pendingUnknownWeightInitialMorphineSafety = true;
+    result.debug.pendingUnknownWeightInitialMorphineDose = getUnknownWeightInitialMorphineDoseLabel();
+  }
 
   // v0.89 safeguard: after opioid safety is confirmed, always merge pending Ketorolac
   // with the chosen opioid into one primary multimodal action. This protects the UI
@@ -23353,6 +23478,22 @@ ${opioidForSafeguard.name}: ${opioidForSafeguard.tooltip}`,
     return null;
   };
 
+  // v2.69: an explicitly tagged initial unknown-weight Morphine 2 mg dose
+  // owns the next state until its 10-minute reassessment boundary.
+  const morphineInitialFollowup = getUnknownWeightInitialMorphineFollowupState(patient, ledger, careSetting);
+  if (morphineInitialFollowup && !result.stops.length && !result.historyVerification?.required) {
+    // v2.69: once the explicit initial unknown-weight 2 mg Morphine pathway has
+    // started, its reassessment state owns the next bedside decision. Do not
+    // surface a fresh rescue candidate (including another opioid) before the
+    // 10-minute reassessment / weight-for-more checkpoint is resolved.
+    result.ranked = [];
+    result.evidenceAlternatives = [];
+    result.morphineInitialRescueFollowup = morphineInitialFollowup;
+    result.debug.needSafetyGate = false;
+    result.debug.awaitingOpioidSafety = false;
+    result.debug.morphineInitialRescueFollowup = morphineInitialFollowup.code;
+  }
+
   // v2.66.1 Phase 1 — non-routine Nefopam rescue fallback.
   // Procedure evidence may deliberately remove Nefopam from routine ranking without
   // making it pharmacologically contraindicated. If the routine ladder is empty and
@@ -23376,6 +23517,7 @@ ${opioidForSafeguard.name}: ${opioidForSafeguard.tooltip}`,
     !result.debug.awaitingOpioidSafety &&
     !result.sequenceNotice &&
     !result.temporalPathway &&
+    !result.morphineInitialRescueFollowup &&
     !(result.activeTreatment?.length) &&
     !result.escalation?.active
   );
@@ -23408,6 +23550,7 @@ ${opioidForSafeguard.name}: ${opioidForSafeguard.tooltip}`,
     !result.debug.awaitingOpioidSafety &&
     !result.sequenceNotice &&
     !result.temporalPathway &&
+    !result.morphineInitialRescueFollowup &&
     !(result.activeTreatment?.length) &&
     !result.escalation?.active
   );
@@ -23428,7 +23571,7 @@ ${opioidForSafeguard.name}: ${opioidForSafeguard.tooltip}`,
   // non-routine Nefopam rung are unavailable, physician reassessment remains the
   // explicit terminal rung. Active treatment / verification / safety checkpoints
   // still outrank escalation, so WAIT is never mislabeled as treatment failure.
-  if (result.ranked.length === 0 && !result.nonRoutineFallback && !result.mildReassessment && nrs >= 4 && nrs <= 9 && !result.stops.length && !result.historyVerification?.required && !result.debug.awaitingOpioidSafety && !result.sequenceNotice && !(result.activeTreatment?.length)) {
+  if (result.ranked.length === 0 && !result.nonRoutineFallback && !result.mildReassessment && !result.morphineInitialRescueFollowup && nrs >= 4 && nrs <= 9 && !result.stops.length && !result.historyVerification?.required && !result.debug.awaitingOpioidSafety && !result.sequenceNotice && !(result.activeTreatment?.length)) {
     const nefopamEscalation = deriveNefopamPhysicianEscalation();
     const holdText = nefopamEscalation?.text || t('hold_no_immediate_option');
     if (!result.holds.includes(holdText)) result.holds.push(holdText);
@@ -23770,13 +23913,13 @@ function getContextualAppIdentity() {
     return ward
       ? {
           title: 'პალატის ტკივილის მართვა',
-          documentTitle: `პალატის ტკივილის მართვა v${APP_VERSION} | დოქტორი ვასილ ხაჩიაშვილი`,
-          logoLabel: `DrX · პალატის ტკივილის მართვა v${APP_VERSION} · დოქტორი ვასილ ხაჩიაშვილი`
+          documentTitle: `პალატის ტკივილის მართვა v${APP_VERSION} | Dr. Vasil Khachiashvili`,
+          logoLabel: `DrX · პალატის ტკივილის მართვა v${APP_VERSION} · Dr. Vasil Khachiashvili`
         }
       : {
           title: 'PACU ტკივილის მართვა',
-          documentTitle: `PACU ტკივილის მართვა v${APP_VERSION} | დოქტორი ვასილ ხაჩიაშვილი`,
-          logoLabel: `DrX · PACU ტკივილის მართვა v${APP_VERSION} · დოქტორი ვასილ ხაჩიაშვილი`
+          documentTitle: `PACU ტკივილის მართვა v${APP_VERSION} | Dr. Vasil Khachiashvili`,
+          logoLabel: `DrX · PACU ტკივილის მართვა v${APP_VERSION} · Dr. Vasil Khachiashvili`
         };
   }
   return ward
@@ -27132,7 +27275,7 @@ function openDoseRecordModal(medName, recommendedDoseText = '', modalOptions = {
     }
     const entry=correctionEntry
       ? replaceExactAdministration(correctionEntry.id,selectedMedName,d,unitSelect.value,routeSelect.value,at,{source:selectedSource,supersedeReconciliation:clarifyWardReconciliation})
-      : recordExactAdministration(selectedMedName,d,unitSelect.value,routeSelect.value,at,{source:selectedSource,supersedeReconciliation:clarifyWardReconciliation});
+      : recordExactAdministration(selectedMedName,d,unitSelect.value,routeSelect.value,at,{source:selectedSource,supersedeReconciliation:clarifyWardReconciliation,initialUnknownWeightMorphine:modalOptions.initialUnknownWeightMorphine===true && selectedMedName==='Morphine'});
     if(!entry){err.textContent=currentLang==='ka'?'ჩანაწერი ვერ შეინახა. გადაამოწმეთ მონაცემები.':'Could not save the record. Check the values.';return;}
     overlay.remove(); refreshAfterDoseHistoryChange();
   });
@@ -27228,14 +27371,15 @@ function appendWeightRequirementAction(container, medName) {
 
 function appendGivenAction(container, medName, doseText) {
   if(!container || !EXACT_RECORDABLE_MEDS.includes(medName)) return;
-  if (medicationRequiresExactWeight(medName, state.patient)) {
+  const unknownWeightInitialMorphine = medName === 'Morphine' && isUnknownWeightInitialMorphineDoseText(medName, doseText);
+  if (medicationRequiresExactWeight(medName, state.patient) && !unknownWeightInitialMorphine) {
     appendWeightRequirementAction(container, medName);
     return;
   }
   let actions=container.querySelector(':scope > .rec-given-actions');
   if(!actions){ actions=document.createElement('div'); actions.className='rec-given-actions'; container.appendChild(actions); }
   const btn=document.createElement('button'); btn.type='button'; btn.className='rec-mark-given-btn'; btn.textContent=(currentLang==='ka'?'✓ მიეცა — ':'✓ Given — ')+medName;
-  btn.addEventListener('click',()=>openDoseRecordModal(medName,doseText||'',{newAdministration:true})); actions.appendChild(btn);
+  btn.addEventListener('click',()=>openDoseRecordModal(medName,doseText||'',{newAdministration:true,initialUnknownWeightMorphine:unknownWeightInitialMorphine})); actions.appendChild(btn);
 }
 
 function appendWeightRequirementPrompt(host, item, options = {}) {
@@ -27447,6 +27591,28 @@ function buildNonRoutineFallbackCard(fallback) {
   return card;
 }
 
+function buildMorphineInitialRescueFollowupCard(followup) {
+  if (!followup) return null;
+  const card=document.createElement('section'); card.className='rec-morphine-followup-card'; card.dataset.morphineFollowup=followup.code;
+  const name=document.createElement('div'); name.className='rec-morphine-followup-name'; name.textContent=currentLang==='ka'?'Morphine · 2 მგ IV':'Morphine · 2 mg IV';
+  const main=document.createElement('div'); main.className='rec-morphine-followup-main';
+  const meta=document.createElement('div'); meta.className='rec-morphine-followup-meta';
+  if (followup.code==='wait_after_initial_2mg') {
+    main.textContent=currentLang==='ka'?`ხელახალი შეფასება ${followup.remainingMin} წთ-ში`:`Reassess in ${followup.remainingMin} min`;
+    meta.textContent=currentLang==='ka'?'დამატებითი Morphine ჯერ არ მისცე.':'Do not give additional Morphine yet.';
+  } else if (followup.code==='weight_required_for_more') {
+    card.classList.add('is-weight-required');
+    main.textContent=currentLang==='ka'?'მეტი დოზისთვის მიუთითე წონა':'Enter weight for additional dosing';
+    meta.textContent=currentLang==='ka'?'პირველი 2 მგ-ის ეფექტი არასაკმარისია.':'The initial 2 mg response was inadequate.';
+    const btn=document.createElement('button'); btn.type='button'; btn.className='rec-weight-required-btn'; btn.textContent=currentLang==='ka'?'მიუთითე წონა':'Enter weight'; btn.addEventListener('click',focusWeightInputForDose);
+    card.append(name,main,meta,btn); return card;
+  } else {
+    main.textContent=currentLang==='ka'?'ხელახალი შეფასება საჭიროა':'Reassessment is due';
+    meta.textContent=currentLang==='ka'?'განაახლე NRS, RR, SpO₂ და POSS.':'Update NRS, RR, SpO₂, and POSS.';
+  }
+  card.append(name,main,meta); return card;
+}
+
 function renderRecommendation() {
   // Update assumed line
   const pain = getEffectivePainAssessment();
@@ -27552,6 +27718,9 @@ function renderRecommendation() {
   // not a physician-review HOLD. Keep it as the primary bedside instruction.
   const mildReassessmentCard = buildMildReassessmentCard(result.mildReassessment);
   if (mildReassessmentCard) content.appendChild(mildReassessmentCard);
+
+  const morphineFollowupCard = buildMorphineInitialRescueFollowupCard(result.morphineInitialRescueFollowup);
+  if (morphineFollowupCard) content.appendChild(morphineFollowupCard);
 
   // Class-specific opioid HOLDs are distinct from global/physiologic STOPs.
   renderOpioidHolds(content, result.holds, result.physicianEscalation);
@@ -27703,6 +27872,14 @@ function renderRecommendation() {
       ${(!primarySafetyState.preliminary && first.conditional) ? `<div class="rec-conditional-note"><strong>${escapeHtml(currentLang==='ka'?'გადაამოწმე მიცემამდე:':'Verify before administration:')}</strong> ${escapeHtml(first.conditional.message)}</div>` : ''}
       ${footerHtml}
     `;
+    if (!primarySafetyState.preliminary && primarySafetyState.initialMorphineWithoutWeight) {
+      const moreDoseWeight = document.createElement('div');
+      moreDoseWeight.className = 'rec-morphine-more-dose-weight';
+      moreDoseWeight.textContent = currentLang === 'ka' ? 'მეტი დოზისთვის მიუთითე წონა' : 'Enter weight for additional dosing';
+      const footer = firstDiv.querySelector('.rec-first-footer');
+      if (footer) firstDiv.insertBefore(moreDoseWeight, footer);
+      else firstDiv.appendChild(moreDoseWeight);
+    }
     if (weightWithSafetyPreliminary) {
       buildSequentialPrerequisiteFlow(firstDiv, first, primarySafetyState);
     } else if (weightOnlyPreliminary) {
@@ -27840,7 +28017,7 @@ function renderRecommendation() {
       appendOptionGroup(rescueChoices, 'rescue');
     }
   } else if (opioidGateRequired || nsaidGateRequired) {
-    const checkpoint = buildGateOnlyRecommendationCheckpoint({ opioidGateRequired, nsaidGateRequired });
+    const checkpoint = buildGateOnlyRecommendationCheckpoint({ opioidGateRequired, nsaidGateRequired, result });
     if (checkpoint) content.appendChild(checkpoint);
   }
 
@@ -28295,12 +28472,14 @@ function recommendationItemContainsOpioid(item) {
 function getPrimaryRecommendationSafetyState(first, result, nsaidGateRequired, opioidGateRequired) {
   const nsaidPending = !!(nsaidGateRequired && recommendationItemContainsMedication(first, 'Ketorolac'));
   const opioidPending = !!(opioidGateRequired && recommendationItemContainsOpioid(first));
-  const weightPending = recommendationRequiresExactWeight(first, state.patient);
+  const initialMorphineWithoutWeight = !!(first && !first.combination && String(first.name || '') === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(state.patient));
+  const weightPending = recommendationRequiresExactWeight(first, state.patient, { allowUnknownWeightInitialMorphine: initialMorphineWithoutWeight });
   return {
     preliminary: nsaidPending || opioidPending || weightPending,
     nsaidPending,
     opioidPending,
-    weightPending
+    weightPending,
+    initialMorphineWithoutWeight
   };
 }
 
@@ -28328,7 +28507,7 @@ function appendIntegratedSafetyGate(host, gate, kind = 'safety', options = {}) {
   return zone;
 }
 
-function buildGateOnlyRecommendationCheckpoint({ opioidGateRequired = false, nsaidGateRequired = false } = {}) {
+function buildGateOnlyRecommendationCheckpoint({ opioidGateRequired = false, nsaidGateRequired = false, result = null } = {}) {
   if (!opioidGateRequired && !nsaidGateRequired) return null;
   const card = document.createElement('div');
   card.className = 'rec-safety-checkpoint-card';
@@ -28336,6 +28515,12 @@ function buildGateOnlyRecommendationCheckpoint({ opioidGateRequired = false, nsa
 
   const compactOpioidOnly = !!(opioidGateRequired && !nsaidGateRequired);
   if (compactOpioidOnly) card.classList.add('safety-only-compact');
+
+  if (compactOpioidOnly && result?.debug?.pendingUnknownWeightInitialMorphineSafety) {
+    const preview=document.createElement('div'); preview.className='rec-pending-morphine-preview';
+    preview.innerHTML=`<div class="rec-pending-morphine-name">Morphine</div><div class="rec-pending-morphine-dose">${escapeHtml(getUnknownWeightInitialMorphineDoseLabel())}</div><div class="rec-pending-morphine-meta">${escapeHtml(currentLang==='ka'?'უსაფრთხოების შემდეგ · ხელახალი შეფასება 10 წთ-ში':'After safety confirmation · reassess in 10 min')}</div>`;
+    card.appendChild(preview);
+  }
 
   if (!compactOpioidOnly) {
     const label = document.createElement('div');
@@ -30293,9 +30478,17 @@ function getMobileFABCopy(mode, reason = '') {
         ? '⚠ უსაფრთხოება დასადასტურებელია'
         : '⚠ Safety confirmation required';
     }
+    if (reason === 'morphine_followup') {
+      return currentLang === 'ka'
+        ? 'Morphine · შემდგომი ნაბიჯი'
+        : 'Morphine · next step';
+    }
     return currentLang === 'ka'
       ? '⚠ გადასამოწმებელია'
       : '⚠ Review needed';
+  }
+  if (mode === 'ready' && reason === 'morphine_followup') {
+    return currentLang === 'ka' ? 'Morphine · ხელახალი შეფასება' : 'Morphine · reassessment';
   }
   if (mode === 'ready' && reason === 'mild_reassess') {
     return currentLang === 'ka' ? '⏱ გადაფასება 30 წთ-ში' : '⏱ Reassess in 30 min';
@@ -30312,6 +30505,7 @@ function getMobileFABCopy(mode, reason = '') {
 
 function getMobileFABStateForResult(result) {
   if (result?.stops?.length) return { mode:'danger', reason:'stop' };
+  if (result?.morphineInitialRescueFollowup) return { mode: result.morphineInitialRescueFollowup.code==='weight_required_for_more'?'attention':'ready', reason:'morphine_followup' };
   if (result?.mildReassessment) return { mode:'ready', reason:'mild_reassess' };
   if (result?.holds?.length) return { mode:'attention', reason:'hold' };
   if (result?.historyVerification?.required) return { mode:'attention', reason:'history' };
@@ -30338,6 +30532,7 @@ function getMobileFABStateForResult(result) {
 function mobileActionSurfaceStatusLabel(mode, reason = '') {
   if (currentLang === 'ka') {
     if (mode === 'danger') return 'STOP';
+    if (reason === 'morphine_followup') return 'Morphine';
     if (reason === 'mild_reassess') return 'გადაფასება';
     if (reason === 'reassess') return 'მიმდინარე მკურნალობა';
     if (reason === 'safety') return 'უსაფრთხოება';
@@ -30348,6 +30543,7 @@ function mobileActionSurfaceStatusLabel(mode, reason = '') {
     return 'რეკომენდაცია';
   }
   if (mode === 'danger') return 'STOP';
+  if (reason === 'morphine_followup') return 'Morphine';
   if (reason === 'mild_reassess') return 'Reassessment';
   if (reason === 'reassess') return 'Active treatment';
   if (reason === 'safety') return 'Safety';
@@ -30368,6 +30564,32 @@ function buildMobileActionSurfaceData(result, effectiveNrs) {
       summary: currentLang === 'ka' ? 'STOP · უსაფრთხოების მოქმედება' : 'STOP · safety action',
       meta: currentLang === 'ka' ? 'გახსენი დეტალები დაუყოვნებლივ' : 'Open details now',
       detail: (result?.stops || [])[0] || getMobileFABCopy(mode, reason)
+    };
+  }
+
+  if (result?.morphineInitialRescueFollowup) {
+    const followup = result.morphineInitialRescueFollowup;
+    if (followup.code === 'weight_required_for_more') {
+      return {
+        mode:'attention', reason:'morphine_followup',
+        summary: currentLang === 'ka' ? 'Morphine · მეტი დოზისთვის მიუთითე წონა' : 'Morphine · enter weight for more',
+        meta: currentLang === 'ka' ? 'პირველი 2 მგ-ის ეფექტი არასაკმარისია' : 'Initial 2 mg response was inadequate',
+        detail: currentLang === 'ka' ? 'დამატებითი Morphine-ის დოზისთვის საჭიროა ზუსტი წონა.' : 'Exact weight is required before additional Morphine dosing.'
+      };
+    }
+    if (followup.code === 'wait_after_initial_2mg') {
+      return {
+        mode:'ready', reason:'morphine_followup',
+        summary: currentLang === 'ka' ? 'Morphine · 2 მგ IV მიღებულია' : 'Morphine · 2 mg IV given',
+        meta: currentLang === 'ka' ? `გადაფასება ${followup.remainingMin} წთ-ში` : `Reassess in ${followup.remainingMin} min`,
+        detail: currentLang === 'ka' ? 'დამატებითი Morphine ჯერ არ მისცე.' : 'Do not give additional Morphine yet.'
+      };
+    }
+    return {
+      mode:'ready', reason:'morphine_followup',
+      summary: currentLang === 'ka' ? 'Morphine · ხელახალი შეფასება' : 'Morphine · reassessment',
+      meta: 'NRS · RR · SpO₂ · POSS',
+      detail: currentLang === 'ka' ? 'ხელახალი შეფასება საჭიროა.' : 'Reassessment is due.'
     };
   }
 
@@ -30442,6 +30664,15 @@ function buildMobileActionSurfaceData(result, effectiveNrs) {
     };
   }
 
+  if (result?.debug?.pendingUnknownWeightInitialMorphineSafety && result?.debug?.needSafetyGate && !(result?.ranked?.length)) {
+    return {
+      mode:'attention', reason:'safety',
+      summary: currentLang === 'ka' ? 'Morphine · 2 მგ IV' : 'Morphine · 2 mg IV',
+      meta: 'RR · SpO₂ · POSS',
+      detail: currentLang === 'ka' ? 'უსაფრთხოების შემდეგ · ხელახალი შეფასება 10 წთ-ში' : 'After safety confirmation · reassess in 10 min'
+    };
+  }
+
   const first = result?.ranked?.[0] || null;
   if (first) {
     const nsaidGateRequired = shouldShowNsaidSafetyGate(result, state.patient, state.given, state.safety);
@@ -30490,9 +30721,11 @@ function buildMobileActionSurfaceData(result, effectiveNrs) {
     return {
       ...stateMap,
       summary,
-      meta: currentLang === 'ka'
-        ? 'მოქმედი რეკომენდაცია · შეეხე დეტალებისთვის'
-        : 'Actionable recommendation · tap for details',
+      meta: safetyState.initialMorphineWithoutWeight
+        ? (currentLang === 'ka' ? 'გადააფასე 10 წთ-ში · მეტი დოზისთვის მიუთითე წონა' : 'Reassess in 10 min · enter weight for more')
+        : (currentLang === 'ka'
+          ? 'მოქმედი რეკომენდაცია · შეეხე დეტალებისთვის'
+          : 'Actionable recommendation · tap for details'),
       detail: first.why || (currentLang === 'ka'
         ? 'გახსენი სრული რეკომენდაცია დოზირების, ინტერვალისა და ხელახალი შეფასების სანახავად.'
         : 'Open the full recommendation for dosing, interval, and reassessment details.')
@@ -31038,7 +31271,8 @@ function runAcceptanceTests() {
 
   // Test 4e — v2.35: NRS6 after resolved baseline + safety confirmed => Morphine is primary
   const g4e = { ...defaultState().given, paracetamol: true, paracetamolCount: 1, ketorolac: true, ketorolacCount: 1 };
-  r = computeNextBest({ surgery: 'lap_hemicolectomy', nrs: 6, given: g4e, lastOpioidBucket: null, safety: freshSafeSafety(), patient: defaultState().patient });
+  const p4e = { ...defaultState().patient, ageYears:55, weightKg:70, weight_low:false };
+  r = computeNextBest({ surgery: 'lap_hemicolectomy', nrs: 6, given: g4e, lastOpioidBucket: null, safety: freshSafeSafety(), patient: p4e });
   log('Test 4e: NRS6 + baseline + safety => Morphine 2–3 mg primary',
     r.ranked[0]?.name === 'Morphine' && /2[–-]3/.test(r.ranked[0]?.dose || ''),
     'ranked:' + r.ranked.map(x => x.name + ':' + x.dose).join(','));
@@ -33698,7 +33932,7 @@ function runAcceptanceTests() {
 
   // Tests 380–384 — v2.35 NRS 6 direct low-dose Morphine pathway + preserved severe dosing.
   state=defaultState(); state.careSetting='pacu'; state.surgery='tka'; state.nrs=6; state.given.medicationCheckStatus='selected'; state.safety=freshSafeSafety();
-  state.patient.nsaid_allergy=true; state.given.paracetamol=true; state.given.metamizole=true; state.given.nefopam=true;
+  state.patient.ageYears=55; state.patient.weightKg=70; state.patient.weight_low=false; state.patient.nsaid_allergy=true; state.given.paracetamol=true; state.given.metamizole=true; state.given.nefopam=true;
   const m380=computeNextBest({surgery:state.surgery,nrs:state.nrs,given:state.given,ledger:ensureDoseLedger(),lastOpioidBucket:null,safety:state.safety,patient:state.patient,careSetting:'pacu'});
   log('Test 380: NRS6 + exhausted standard non-opioids + safe opioid gate => Morphine 2–3 mg before generic doctor-call fallback', m380.debug.nrs6MorphineRescuePathway===true && m380.ranked[0]?.name==='Morphine' && /2[–-]3/.test(m380.ranked[0]?.dose||'') && !m380.stops.includes(t('stop_all_blocked')), JSON.stringify({ranked:m380.ranked.map(x=>({name:x.name,dose:x.dose})),debug:m380.debug,stops:m380.stops}));
 
@@ -33711,11 +33945,13 @@ function runAcceptanceTests() {
   log('Test 382: NRS6 with unresolved baseline stays on baseline/non-opioid treatment and does not open Morphine rescue', m382.debug.nrs6MorphineRescuePathway!==true && m382.ranked.some(x=>['Paracetamol','Metamizole','Ketorolac','Nefopam'].includes(x.name)), JSON.stringify({ranked:m382.ranked.map(x=>x.name),debug:m382.debug}));
 
   const g383={...defaultState().given,medicationCheckStatus:'selected',paracetamol:true,paracetamolCount:1,ketorolac:true,ketorolacCount:1};
-  const m383=computeNextBest({surgery:'lap_hemicolectomy',nrs:6,given:g383,lastOpioidBucket:null,safety:freshSafeSafety(),patient:defaultState().patient,careSetting:'pacu'});
+  const p383={...defaultState().patient,ageYears:55,weightKg:70,weight_low:false};
+  const m383=computeNextBest({surgery:'lap_hemicolectomy',nrs:6,given:g383,lastOpioidBucket:null,safety:freshSafeSafety(),patient:p383,careSetting:'pacu'});
   const morph383=m383.ranked.find(x=>x.name==='Morphine');
   log('Test 383: every Morphine recommendation at NRS5–6 uses the dedicated 2–3 mg rescue dose', !!morph383 && /2[–-]3/.test(morph383.dose||''), JSON.stringify(m383.ranked.map(x=>({name:x.name,dose:x.dose}))));
 
-  const m384=computeNextBest({surgery:'tka',nrs:8,given:defaultState().given,lastOpioidBucket:null,safety:freshSafeSafety(),patient:defaultState().patient,careSetting:'pacu'});
+  const p384={...defaultState().patient,ageYears:55,weightKg:70,weight_low:false};
+  const m384=computeNextBest({surgery:'tka',nrs:8,given:defaultState().given,lastOpioidBucket:null,safety:freshSafeSafety(),patient:p384,careSetting:'pacu'});
   const morph384=m384.ranked.flatMap(x=>x.combination&&Array.isArray(x.parts)?x.parts:[x]).find(x=>x.name==='Morphine');
   log('Test 384: severe-pain Morphine dosing remains on the existing standard 3–5 mg pathway', !!morph384 && /3[–-]5/.test(morph384.dose||''), JSON.stringify(m384.ranked.map(x=>({name:x.name,dose:x.dose,parts:x.parts}))));
 
@@ -33774,10 +34010,11 @@ function runAcceptanceTests() {
 
   // Tests 401–410 — v2.35 Phase 1 unified PACU + Ward pain sequencing.
   const base401={...defaultState().given,medicationCheckStatus:'selected',paracetamol:true,paracetamolCount:1,ketorolac:true,ketorolacCount:1};
-  const u401=computeNextBest({surgery:'tka',nrs:6,given:base401,ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:defaultState().patient,careSetting:'pacu'});
+  const p401={...defaultState().patient,ageYears:55,weightKg:70,weight_low:false};
+  const u401=computeNextBest({surgery:'tka',nrs:6,given:base401,ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:p401,careSetting:'pacu'});
   log('Test 401: PACU NRS6 + resolved baseline + safe gate => Morphine 2–3 mg is primary', u401.debug.nrs6MorphineRescuePathway===true && u401.ranked[0]?.name==='Morphine' && /2[–-]3/.test(u401.ranked[0]?.dose||'') && !u401.ranked.some(x=>x.name==='Fentanyl'), JSON.stringify({ranked:u401.ranked.map(x=>({name:x.name,dose:x.dose})),debug:u401.debug}));
 
-  state=defaultState(); state.careSetting='ward'; state.given.medicationCheckStatus='selected';
+  state=defaultState(); state.careSetting='ward'; state.given.medicationCheckStatus='selected'; state.patient.ageYears=55; state.patient.weightKg=70; state.patient.weight_low=false;
   recordExactAdministration('Paracetamol',1000,'mg','IV',new Date(Date.now()-120*60000).toISOString(),{source:'postop'});
   recordExactAdministration('Ketorolac',30,'mg','IV',new Date(Date.now()-120*60000).toISOString(),{source:'postop'});
   const u402=computeNextBest({surgery:'tka',nrs:6,given:state.given,ledger:ensureDoseLedger(),lastOpioidBucket:null,safety:freshSafeSafety(),patient:state.patient,careSetting:'ward'});
@@ -33815,7 +34052,8 @@ function runAcceptanceTests() {
   const u409=computeNextBest({surgery:'tka',nrs:6,given:{...defaultState().given,medicationCheckStatus:'selected'},ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:defaultState().patient,careSetting:'pacu'});
   log('Test 409: NRS6 unresolved baseline still prioritizes baseline/non-opioid treatment and does not expose Morphine', u409.debug.moderateBaseline?.resolved===false && !u409.ranked.some(x=>x.name==='Morphine'||x.name==='Fentanyl') && u409.ranked.some(x=>x.name==='Paracetamol'||x.name==='Ketorolac'), JSON.stringify({ranked:u409.ranked.map(x=>x.name),baseline:u409.debug.moderateBaseline}));
 
-  const u410=computeNextBest({surgery:'tka',nrs:8,given:defaultState().given,ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:defaultState().patient,careSetting:'pacu'});
+  const p410={...defaultState().patient,ageYears:55,weightKg:70,weight_low:false};
+  const u410=computeNextBest({surgery:'tka',nrs:8,given:defaultState().given,ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:p410,careSetting:'pacu'});
   const morph410=u410.ranked.flatMap(x=>x.combination&&Array.isArray(x.parts)?x.parts:[x]).find(x=>x.name==='Morphine');
   log('Test 410: NRS8 severe pathway remains on standard Morphine 3–5 mg dosing after Phase 1', !!morph410 && /3[–-]5/.test(morph410.dose||''), JSON.stringify(u410.ranked.map(x=>({name:x.name,dose:x.dose,parts:x.parts}))));
 
@@ -33851,7 +34089,7 @@ function runAcceptanceTests() {
   log('Test 415: clarifying one Ward drug removes only that drug from verification list', u415.historyVerification?.required===true && !u415.historyVerification.medications.includes('Paracetamol') && u415.historyVerification.medications.includes('Ketorolac'), JSON.stringify({verify:u415.historyVerification,ledger:ensureDoseLedger().map(e=>({med:e.med,source:e.source,superseded:e.superseded,exact:e.exact}))}));
   state=savedState415;
 
-  const q416=defaultState(); q416.careSetting='ward'; q416.given.medicationCheckStatus='selected';
+  const q416=defaultState(); q416.careSetting='ward'; q416.given.medicationCheckStatus='selected'; q416.patient.ageYears=55; q416.patient.weightKg=70; q416.patient.weight_low=false;
   q416.given.doseLedger=[
     backfillLedgerEntry({id:'q416p',med:'Paracetamol',mg:null,doseKnown:false,timeKnown:false,source:'ward-history',origin:LEDGER_ORIGIN_RECONCILIATION,at:new Date().toISOString(),recordedAt:new Date().toISOString()}),
     backfillLedgerEntry({id:'q416k',med:'Ketorolac',mg:null,doseKnown:false,timeKnown:false,source:'ward-history',origin:LEDGER_ORIGIN_RECONCILIATION,at:new Date().toISOString(),recordedAt:new Date().toISOString()})
@@ -34145,7 +34383,7 @@ function runAcceptanceTests() {
   log('Test 485: Georgian persistent-pain disclosure avoids Trigger/STOP mixing and states the rule condition in natural Georgian', /ამ წესის ამოქმედების პირობაა/.test(note485) && !/(Trigger|STOP|ტრიგერი)/i.test(note485), note485);
 
   currentLang='ka'; renderAccessibilityLabels(); const footer486=document.getElementById('footer-branding')?.textContent||'';
-  log('Test 486: footer branding remains intentionally English in Georgian mode', footer486==='PACU Pain Management v2.67 | By Dr. Vasil Khachiashvili', footer486);
+  log('Test 486: footer branding remains intentionally English in Georgian mode', footer486==='PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili', footer486);
 
   // Tests 487–493 — v2.38 Phase 1 evidence provenance architecture.
   const sourceKeys487=Object.keys(prospectData);
@@ -34539,12 +34777,12 @@ function runAcceptanceTests() {
   const enTitle550=document.title;
   const enFooter550=document.getElementById('footer-branding')?.textContent||'';
   log('Test 550: current title/version is consistent and footer branding remains intentionally English in both languages',
-    kaTitle550.includes('v2.67') && enTitle550.includes('v2.67') &&
-    kaFooter550==='PACU Pain Management v2.67 | By Dr. Vasil Khachiashvili' && enFooter550===kaFooter550,
+    kaTitle550.includes('v2.70 RC') && enTitle550.includes('v2.70 RC') &&
+    kaFooter550==='PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili' && enFooter550===kaFooter550,
     JSON.stringify({kaTitle:kaTitle550,enTitle:enTitle550,kaFooter:kaFooter550,enFooter:enFooter550}));
 
-  log('Test 551: current Stable metadata preserves the v19-compatible storage schema',
-    APP_VERSION==='2.67' && APP_RELEASE_CHANNEL==='development' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
+  log('Test 551: current RC metadata preserves the v19-compatible storage schema',
+    APP_VERSION==='2.70 RC' && APP_RELEASE_CHANNEL==='release-candidate' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
     JSON.stringify({version:APP_VERSION,channel:APP_RELEASE_CHANNEL,stateKey:STATE_KEY,previousKey:PREVIOUS_STATE_KEY}));
 
   // Current-state round trip: Ward coarse history + structured regional record survive;
@@ -35280,7 +35518,7 @@ function runAcceptanceTests() {
     document.getElementById('given-edit-body')?.className||'missing');
 
   log('Test 688: release metadata preserves the v19-compatible storage schema',
-    APP_VERSION==='2.67' && APP_RELEASE_CHANNEL==='development' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
+    APP_VERSION==='2.70 RC' && APP_RELEASE_CHANNEL==='release-candidate' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
     JSON.stringify({version:APP_VERSION,channel:APP_RELEASE_CHANNEL,stateKey:STATE_KEY,previousKey:PREVIOUS_STATE_KEY}));
 
   // Tests 689–691, 693–695 — v2.54 Phase 2 workflow compression + NRS-always-visible refinement.
@@ -35723,9 +35961,9 @@ function runAcceptanceTests() {
 
   // Tests 764–771 — v2.54 Ward Final QA / release-contract regression.
   state=defaultState(); currentLang='ka'; renderAll();
-  log('Test 764: v2.63.1 build preserves v19 persistence and active UI-state compatibility keys',
-    APP_VERSION==='2.67' &&
-    APP_RELEASE_CHANNEL==='development' &&
+  log('Test 764: current RC build preserves v19 persistence and active UI-state compatibility keys',
+    APP_VERSION==='2.70 RC' &&
+    APP_RELEASE_CHANNEL==='release-candidate' &&
     STATE_KEY==='pacu_pain_state_v19' &&
     PREVIOUS_STATE_KEY==='pacu_pain_state_v18' &&
     Object.prototype.hasOwnProperty.call(defaultState().ui,'converterCollapsed') &&
@@ -36342,7 +36580,7 @@ function runAcceptanceTests() {
 
   currentLang='ka'; renderContextualAppIdentity();
   log('Test 865: v2.60.5 footer branding remains intentionally English in Georgian mode',
-    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.67 | By Dr. Vasil Khachiashvili',
+    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili',
     document.getElementById('footer-branding')?.textContent||'missing');
 
   const deadKa865=['given_text_unrecognized','given_check_basic','given_check_safety_group','baseline_note_nonprospect'];
@@ -36458,7 +36696,7 @@ function runAcceptanceTests() {
   state.careSetting='pacu'; currentLang='ka'; renderCareSetting(); renderContextualAppIdentity();
   log('Test 822: switching back to PACU restores PACU identity without changing product footer branding',
     document.getElementById('app-title')?.textContent==='PACU ტკივილის მართვა' &&
-    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.67 | By Dr. Vasil Khachiashvili',
+    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.70 RC | By Dr. Vasil Khachiashvili',
     JSON.stringify({header:document.getElementById('app-title')?.textContent,footer:document.getElementById('footer-branding')?.textContent}));
 
   state=defaultState(); currentLang='ka';
@@ -36480,9 +36718,9 @@ function runAcceptanceTests() {
 
   // Tests 825–834 — v2.54 Final Regression Phase 6.
   const release825=window.App?.releaseInfo?.() || {version:APP_VERSION,channel:APP_RELEASE_CHANNEL,stateKey:STATE_KEY};
-  log('Test 825: v2.67 development release contract preserves the validated base while preserving v19 persistence compatibility',
-    APP_VERSION==='2.67' && APP_RELEASE_CHANNEL==='development' && STATE_KEY==='pacu_pain_state_v19' &&
-    release825.version==='2.67' && release825.channel==='development' && release825.stateKey==='pacu_pain_state_v19',
+  log('Test 825: v2.70 RC release contract preserves the validated base while preserving v19 persistence compatibility',
+    APP_VERSION==='2.70 RC' && APP_RELEASE_CHANNEL==='release-candidate' && STATE_KEY==='pacu_pain_state_v19' &&
+    release825.version==='2.70 RC' && release825.channel==='release-candidate' && release825.stateKey==='pacu_pain_state_v19',
     JSON.stringify(release825));
 
   state=defaultState(); currentLang='ka'; hvPrefillFromState({force:true});
@@ -36794,6 +37032,7 @@ function runAcceptanceTests() {
   state=defaultState(); currentLang='ka'; state.careSetting='pacu'; state.surgery='chole'; state.nrs=7;
   state.patient.ageYears=55; state.patient.weightKg=null; state.patient.weight_low=false;
   state.given={...defaultState().given,medicationCheckStatus:'selected',paracetamol:true,paracetamolCount:1,ketorolac:true,ketorolacCount:1};
+  state.given.doseLedger=[backfillLedgerEntry({id:'w878-prior-morph',med:'Morphine',dose:2,unit:'mg',mg:2,route:'IV',exact:true,doseKnown:true,timeKnown:true,source:'postop',origin:LEDGER_ORIGIN_PACU,at:new Date(Date.now()-120*60000).toISOString(),recordedAt:new Date(Date.now()-120*60000).toISOString()})];
   state.safety={...freshSafeSafety(),nsaidGateStatus:'normal'};
   renderRecommendation();
   const w878=document.querySelector('#rec-content .rec-first.weight-only-preliminary');
@@ -36866,6 +37105,7 @@ function runAcceptanceTests() {
   state=defaultState(); currentLang='ka'; state.careSetting='pacu'; state.surgery='chole'; state.nrs=7;
   state.patient.ageYears=55; state.patient.weightKg=null; state.patient.weight_low=false;
   state.given={...defaultState().given,medicationCheckStatus:'selected',paracetamol:true,paracetamolCount:1,ketorolac:true,ketorolacCount:1};
+  state.given.doseLedger=[backfillLedgerEntry({id:'c887-prior-morph',med:'Morphine',dose:2,unit:'mg',mg:2,route:'IV',exact:true,doseKnown:true,timeKnown:true,source:'postop',origin:LEDGER_ORIGIN_PACU,at:new Date(Date.now()-120*60000).toISOString(),recordedAt:new Date(Date.now()-120*60000).toISOString()})];
   state.safety={...freshSafeSafety(),nsaidGateStatus:'normal'};
   renderRecommendation();
   const c887=document.querySelector('#rec-content .rec-first.weight-only-preliminary.prerequisite-compact-card');
@@ -37139,6 +37379,106 @@ function runAcceptanceTests() {
   log('Test 925: v2.67 Ward NRS3 uses the same mild-pain reassessment semantic when no higher-priority Ward state is active',
     mild925.mildReassessment?.code==='mild_pain_reassess' && mild925.holds.length===0 && !mild925.physicianEscalation, JSON.stringify({reassess:mild925.mildReassessment,holds:mild925.holds,escalation:mild925.physicianEscalation}));
 
+  // Tests 926–931 — v2.68 unknown-weight Morphine initial rescue.
+  state=defaultState(); currentLang='ka'; state.careSetting='ward'; state.surgery='chole'; state.nrs=7;
+  state.patient.ageYears=55; state.patient.weightKg=null; state.patient.weight_low=false; state.given.medicationCheckStatus='selected';
+  state.given.paracetamol=true; state.given.ketorolac=true; state.given.metamizole=true;
+  const m926=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:state.patient,careSetting:'ward'});
+  log('Test 926: v2.68 safe NRS7 Morphine rescue with unknown weight exposes one exact 2 mg IV initial dose instead of a weight-only blocker',
+    m926.ranked[0]?.name==='Morphine' && /^2\s*(?:მგ|mg)\s*IV/i.test(m926.ranked[0]?.dose||'') && m926.debug.unknownWeightInitialMorphineRescue===true,
+    JSON.stringify({ranked:m926.ranked.map(x=>({name:x.name,dose:x.dose})),debug:m926.debug}));
+
+  state.safety=freshSafeSafety(); renderRecommendation();
+  const m927Card=document.querySelector('#rec-content .rec-first');
+  const m927Text=(m927Card?.textContent||'').replace(/\s+/g,' ').trim();
+  const m927WeightBtn=m927Card?.querySelector('.rec-weight-required-btn');
+  const m927GiveBtn=m927Card?.querySelector('.rec-mark-given-btn');
+  log('Test 927: v2.68 unknown-weight initial Morphine is actionable after safety, shows 10-minute reassessment and reserves weight for additional dosing',
+    !!m927Card && /Morphine/.test(m927Text) && /2\s*მგ/.test(m927Text) && /10\s*წთ/.test(m927Text) && /მეტი დოზისთვის მიუთითე წონა/.test(m927Text) && !m927WeightBtn && !!m927GiveBtn,
+    JSON.stringify({text:m927Text,weightBtn:!!m927WeightBtn,giveBtn:!!m927GiveBtn}));
+
+  state.safety={...defaultState().safety,confirmedSafe:false,confirmedAt:null,rr:null,spo2:null,poss:null};
+  const m928=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:[],lastOpioidBucket:null,safety:state.safety,patient:state.patient,careSetting:'ward'});
+  log('Test 928: v2.68 unknown weight never bypasses the opioid RR/SpO2/POSS safety gate',
+    m928.debug.needSafetyGate===true && !m928.ranked.some(x=>x.name==='Morphine'),
+    JSON.stringify({gate:m928.debug.needSafetyGate,ranked:m928.ranked.map(x=>x.name)}));
+
+  const m929At=new Date(Date.now()-20*60000).toISOString();
+  const m929Ledger=[backfillLedgerEntry({id:'m929',med:'Morphine',dose:2,unit:'mg',mg:2,route:'IV',exact:true,doseKnown:true,timeKnown:true,source:'postop',origin:LEDGER_ORIGIN_PACU,at:m929At,recordedAt:m929At})];
+  state.safety=freshSafeSafety();
+  const m929=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:m929Ledger,lastOpioidBucket:null,safety:state.safety,patient:state.patient,careSetting:'ward'});
+  const m929Morph=m929.ranked.find(x=>x.name==='Morphine');
+  log('Test 929: v2.68 a prior Morphine administration in the active window disables the unknown-weight 2 mg exception and prevents a repeated 2 mg loop',
+    !m929.debug.unknownWeightInitialMorphineRescue && !isUnknownWeightInitialMorphineRescueAvailable(state.patient,m929Ledger,'ward') && (!m929Morph || !/^2\s*(?:მგ|mg)\s*IV/i.test(m929Morph.dose||'')),
+    JSON.stringify({ranked:m929.ranked.map(x=>({name:x.name,dose:x.dose})),debug:m929.debug}));
+
+  const m930Patient={...state.patient,weightKg:49,weight_low:true};
+  const m930=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:m930Patient,careSetting:'ward'});
+  const m930Morph=m930.ranked.find(x=>x.name==='Morphine');
+  log('Test 930: v2.68 known 49 kg keeps the established reduced 2–3 mg branch rather than the unknown-weight fixed-dose exception',
+    !!m930Morph && /2[–-]3/.test(m930Morph.dose||'') && !m930.debug.unknownWeightInitialMorphineRescue,
+    JSON.stringify({dose:m930Morph?.dose,debug:m930.debug}));
+
+  const m931Patient={...state.patient,weightKg:50,weight_low:false};
+  const m931=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:m931Patient,careSetting:'ward'});
+  const m931Morph=m931.ranked.find(x=>x.name==='Morphine');
+  log('Test 931: v2.68 exact 50 kg remains the standard 3–5 mg branch',
+    !!m931Morph && /3[–-]5/.test(m931Morph.dose||'') && !m931.debug.unknownWeightInitialMorphineRescue,
+    JSON.stringify({dose:m931Morph?.dose,debug:m931.debug}));
+
+  // Tests 932–939 — v2.69 Morphine state/UI integration.
+  state=defaultState(); currentLang='ka'; state.careSetting='ward'; state.surgery='chole'; state.nrs=7; state.patient.ageYears=55; state.patient.weightKg=null; state.patient.weight_low=false; state.given.medicationCheckStatus='selected'; state.given.paracetamol=true; state.given.ketorolac=true; state.given.metamizole=true; state.safety={...defaultState().safety};
+  const m932=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:[],lastOpioidBucket:null,safety:state.safety,patient:state.patient,careSetting:'ward'});
+  log('Test 932: v2.69 pending safety preserves intended unknown-weight Morphine 2 mg preview',m932.debug.needSafetyGate===true&&m932.debug.pendingUnknownWeightInitialMorphineSafety===true&&m932.ranked.length===0,JSON.stringify({debug:m932.debug,ranked:m932.ranked}));
+
+  state.safety=freshSafeSafety(); const m933=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:[],lastOpioidBucket:null,safety:state.safety,patient:state.patient,careSetting:'ward'}); const m933Mobile=buildMobileActionSurfaceData(m933,7);
+  log('Test 933: v2.69 actionable unknown-weight Morphine and sticky state agree on 2 mg and 10-minute reassessment',m933.ranked[0]?.name==='Morphine'&&/^2\s*მგ\s*IV/.test(m933.ranked[0]?.dose||'')&&/2\s*მგ/.test(m933Mobile.summary||'')&&/10\s*წთ/.test(m933Mobile.meta||''),JSON.stringify({ranked:m933.ranked[0],mobile:m933Mobile}));
+
+  state=defaultState(); currentLang='ka'; state.careSetting='pacu'; state.surgery='chole'; state.nrs=7; state.patient.ageYears=55; state.patient.weightKg=null; state.given.medicationCheckStatus='selected'; state.safety=freshSafeSafety();
+  const m934Entry=recordExactAdministration('Morphine',2,'mg','IV',new Date(Date.now()-3*60000).toISOString(),{source:'pacu',origin:LEDGER_ORIGIN_PACU,prePainObserved:true,prePainScore:7,prePainSource:'nrs',initialUnknownWeightMorphine:true}); const m934=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:ensureDoseLedger(),lastOpioidBucket:null,safety:state.safety,patient:state.patient,careSetting:'pacu'});
+  log('Test 934: v2.69 initial 2 mg enters wait/reassess before 10 minutes',!!m934Entry&&m934.morphineInitialRescueFollowup?.code==='wait_after_initial_2mg'&&m934.ranked.length===0&&!m934.debug.needSafetyGate,JSON.stringify({follow:m934.morphineInitialRescueFollowup,ranked:m934.ranked,debug:m934.debug}));
+
+  const m935At=new Date(Date.now()-12*60000).toISOString(); state=defaultState(); currentLang='ka'; state.careSetting='pacu'; state.surgery='chole'; state.nrs=7; state.patient.ageYears=55; state.patient.weightKg=null; state.given.medicationCheckStatus='selected'; state.safety=freshSafeSafety();
+  const m935Ledger=[backfillLedgerEntry({id:'m935',med:'Morphine',dose:2,unit:'mg',mg:2,route:'IV',exact:true,doseKnown:true,timeKnown:true,source:'pacu',origin:LEDGER_ORIGIN_PACU,at:m935At,recordedAt:m935At,prePainObserved:true,prePainScore:7,initialUnknownWeightMorphine:true,response:'insufficient',responsePainScore:7})]; const m935=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:m935Ledger,lastOpioidBucket:null,safety:state.safety,patient:state.patient,careSetting:'pacu'});
+  log('Test 935: v2.69 inadequate initial 2 mg requires weight for further Morphine instead of a second fixed 2 mg loop',m935.morphineInitialRescueFollowup?.code==='weight_required_for_more'&&!m935.ranked.some(x=>x.name==='Morphine'&&/^2\s*მგ\s*IV/.test(x.dose||'')),JSON.stringify({follow:m935.morphineInitialRescueFollowup,ranked:m935.ranked}));
+
+  const m936Patient={...state.patient,weightKg:49,weight_low:true}; const m936=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:m935Ledger,lastOpioidBucket:null,safety:freshSafeSafety(),patient:m936Patient,careSetting:'pacu'});
+  log('Test 936: v2.69 entering 49 kg exits unknown-weight follow-up state',!m936.morphineInitialRescueFollowup,JSON.stringify({follow:m936.morphineInitialRescueFollowup,ranked:m936.ranked.map(x=>({name:x.name,dose:x.dose}))}));
+  const m937Patient={...state.patient,weightKg:55,weight_low:false}; const m937=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:m935Ledger,lastOpioidBucket:null,safety:freshSafeSafety(),patient:m937Patient,careSetting:'pacu'});
+  log('Test 937: v2.69 entering standard weight removes unknown-weight follow-up state',!m937.morphineInitialRescueFollowup,JSON.stringify({follow:m937.morphineInitialRescueFollowup,ranked:m937.ranked.map(x=>({name:x.name,dose:x.dose}))}));
+
+  state=defaultState(); currentLang='ka'; state.careSetting='ward'; state.surgery='chole'; state.nrs=6; state.patient.ageYears=55; state.patient.weightKg=null; state.given.medicationCheckStatus='selected'; state.safety={...defaultState().safety};
+  const m938At=new Date(Date.now()-120*60000).toISOString();
+  const m938Ledger=[
+    backfillLedgerEntry({id:'m938-p',med:'Paracetamol',dose:1000,unit:'mg',mg:1000,route:'IV',exact:true,doseKnown:true,timeKnown:true,source:'postop',origin:LEDGER_ORIGIN_PACU,at:m938At,recordedAt:m938At}),
+    backfillLedgerEntry({id:'m938-k',med:'Ketorolac',dose:30,unit:'mg',mg:30,route:'IV',exact:true,doseKnown:true,timeKnown:true,source:'postop',origin:LEDGER_ORIGIN_PACU,at:m938At,recordedAt:m938At})
+  ];
+  const m938=computeNextBest({surgery:'chole',nrs:6,given:state.given,ledger:m938Ledger,lastOpioidBucket:null,safety:state.safety,patient:state.patient,careSetting:'ward'});
+  log('Test 938: v2.69 NRS6 Morphine pathway previews the same 2 mg rescue behind safety',m938.debug.needSafetyGate===true&&m938.debug.pendingUnknownWeightInitialMorphineSafety===true,JSON.stringify(m938.debug));
+  const m939Patient={...state.patient,ileus:true}; const m939=computeNextBest({surgery:'chole',nrs:7,given:state.given,ledger:[],lastOpioidBucket:null,safety:{...defaultState().safety},patient:m939Patient,careSetting:'ward'});
+  log('Test 939: v2.69 ileus never exposes unknown-weight Morphine preview',m939.debug.pendingUnknownWeightInitialMorphineSafety!==true,JSON.stringify({debug:m939.debug,blocked:m939.blocked.map(x=>x.name)}));
+
+  // Tests 940–942 — v2.70 RC explicit Morphine release-boundary guards.
+  const morphineDoseFromResult940 = (result) => {
+    const direct = result.ranked.find(x=>x.name==='Morphine');
+    if (direct) return direct.dose || '';
+    for (const item of result.ranked) {
+      const part = Array.isArray(item.parts) ? item.parts.find(p=>p.name==='Morphine') : null;
+      if (part) return part.dose || '';
+    }
+    return '';
+  };
+  const m940Base={...defaultState().patient,weightKg:70,weight_low:false,crcl_mid:false,crcl_low:false,renal_dysfunction:false,renalBand:'ge60'};
+  const m940=computeNextBest({surgery:'chole',nrs:8,given:{...defaultState().given,medicationCheckStatus:'selected'},ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:{...m940Base,ageYears:64,age65:false},careSetting:'pacu'});
+  log('Test 940: v2.70 RC age 64 stays on the standard Morphine 3–5 mg branch',/3[–-]5/.test(morphineDoseFromResult940(m940)),morphineDoseFromResult940(m940));
+
+  const m941=computeNextBest({surgery:'chole',nrs:8,given:{...defaultState().given,medicationCheckStatus:'selected'},ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:{...m940Base,ageYears:65,age65:true},careSetting:'pacu'});
+  log('Test 941: v2.70 RC exact age 65 enters the reduced Morphine 2–3 mg branch',/2[–-]3/.test(morphineDoseFromResult940(m941)),morphineDoseFromResult940(m941));
+
+  const m942Patient={...m940Base,ageYears:55,age65:false,crcl_mid:true,renal_dysfunction:true,renalBand:'mid'};
+  const m942=computeNextBest({surgery:'chole',nrs:8,given:{...defaultState().given,medicationCheckStatus:'selected'},ledger:[],lastOpioidBucket:null,safety:freshSafeSafety(),patient:m942Patient,careSetting:'pacu'});
+  log('Test 942: v2.70 RC CrCl/eGFR 30–59 preserves the reduced Morphine 2–3 mg branch',/2[–-]3/.test(morphineDoseFromResult940(m942)),morphineDoseFromResult940(m942));
+
   state=stateBefore550; currentLang=langBefore550; renderAll();
 
   const passed = tests.filter(t => t.pass).length;
@@ -37388,7 +37728,7 @@ function init() {
   window.App.getSessionOwnershipStatus = getSessionOwnershipStatus;
   window.App.printPreflight = () => hvLastPrintPreflight;
   maybeRunSelfTest();
-  debugLog('[PACU] v2.67 mild-pain reassessment development build initialized. Run App.runAcceptanceTests(), App.runLayoutSmokeTests(), or add ?selftest=1 to QA.');
+  debugLog('[PACU] v2.70 RC full-regression build initialized. Run App.runAcceptanceTests(), App.runLayoutSmokeTests(), or add ?selftest=1 to QA.');
 }
 
 return { init };
@@ -37396,6 +37736,13 @@ return { init };
 })();
 
 App.init();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>
