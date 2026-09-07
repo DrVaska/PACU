@@ -34,8 +34,10 @@
 })();
 </script>
 <meta name="color-scheme" content="light dark">
-<title>PACU ტკივილის მართვა v2.71 Stable | Dr. Vasil Khachiashvili</title>
-<link href="fonts/fonts.css" rel="stylesheet">
+<title>PACU ტკივილის მართვა v2.75 | დოქტორი ვასილ ხაჩიაშვილი</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Georgian:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   /* Colors */
@@ -3688,15 +3690,54 @@ section[aria-labelledby="h-given"] .given-chips-grid {
 }
 
 /* ---------- PATIENT FACTORS CATEGORIES (rendered inside patient-factors card) ---------- */
+.factor-category-group {
+  display: grid;
+  gap: 8px;
+}
+.factor-category-group + .factor-category-group {
+  margin-top: 12px;
+  padding-top: 11px;
+  border-top: 1px solid var(--border);
+}
+.factor-category-group-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 2px;
+}
+.factor-category-group-title {
+  color: var(--ink-soft);
+  font-size: 11.5px;
+  line-height: 1.25;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .045em;
+}
+.factor-category-group-hint {
+  color: var(--muted);
+  font-size: 10.4px;
+  line-height: 1.3;
+  font-weight: 700;
+  text-align: right;
+}
 .override-categories {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 16px;
+  gap: 8px;
+  align-items: start;
+}
+.override-category-column {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
 }
 
 @media(min-width: 640px) {
   .override-categories {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px 12px;
   }
 }
 
@@ -3707,11 +3748,10 @@ section[aria-labelledby="h-given"] .given-chips-grid {
   background: var(--bg);
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.01);
   overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.override-cat-card:last-child {
-  margin-bottom: 0;
+  margin: 0;
+  height: fit-content;
+  min-height: 0;
+  align-self: start;
 }
 
 /* v2.60.5 Phase 5: documentation-only history remains available for handover
@@ -3738,6 +3778,45 @@ section[aria-labelledby="h-given"] .given-chips-grid {
   text-align: left;
   cursor: pointer;
   transition: var(--transition);
+}
+.override-cat-header-copy {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: grid;
+  gap: 2px;
+}
+.override-cat-title {
+  min-width: 0;
+  color: inherit;
+  font-size: 12.7px;
+  line-height: 1.28;
+  font-weight: 850;
+}
+.override-cat-subtitle {
+  min-width: 0;
+  color: var(--muted);
+  font-size: 10.4px;
+  line-height: 1.25;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.override-cat-card.has-active-items .override-cat-subtitle {
+  color: var(--ink-soft);
+  font-weight: 800;
+}
+.override-cat-card.opioid-context-card.has-selection {
+  border-color: rgba(217,119,6,.28);
+}
+.override-cat-card.opioid-context-card.has-selection .override-cat-title {
+  color: var(--amber);
+}
+.override-cat-header-side {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 }
 
 .override-cat-header-btn:hover {
@@ -3866,6 +3945,80 @@ section[aria-labelledby="h-given"] .given-chips-grid {
   background-size: 11px;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+/* ---------- v2.72.1 OPIOID CONTEXT · PHASE 1 ---------- */
+.opioid-context-card.has-selection {
+  border-color: rgba(217, 119, 6, 0.28);
+  background: color-mix(in srgb, var(--paper) 88%, var(--amber-soft));
+}
+.opioid-context-editor {
+  display: grid;
+  gap: 9px;
+}
+.opioid-context-field {
+  display: grid;
+  gap: 5px;
+}
+.opioid-context-field-label {
+  color: var(--ink-soft);
+  font-size: 11.5px;
+  line-height: 1.25;
+  font-weight: 900;
+}
+.opioid-context-select,
+.opioid-context-dose-input {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 12.3px;
+  font-weight: 750;
+}
+.opioid-context-select { padding: 7px 10px; }
+.opioid-context-dose-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+}
+.opioid-context-dose-input {
+  padding: 7px 9px;
+  outline: none;
+}
+.opioid-context-dose-input:focus,
+.opioid-context-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.opioid-context-unit {
+  color: var(--muted);
+  font-size: 10.8px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+.opioid-context-maintenance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+}
+.opioid-context-note {
+  color: var(--muted);
+  font-size: 10.8px;
+  line-height: 1.35;
+  font-weight: 650;
+}
+[data-theme="dark"] .opioid-context-card.has-selection { background: rgba(245,158,11,.04); }
+@media (max-width: 600px) {
+  .opioid-context-maintenance-grid { grid-template-columns: 1fr; gap: 7px; }
+  .opioid-context-select, .opioid-context-dose-input { min-height: 36px; font-size: 11.8px; }
+  .opioid-context-field-label { font-size: 11px; }
+  .opioid-context-note { font-size: 10.3px; }
 }
 
 /* ---------- PATIENT FACTORS VISIBLE CARD ---------- */
@@ -5064,6 +5217,187 @@ section[aria-labelledby="h-given"] .given-chips-grid {
     border-radius: 14px;
   }
   .rec-first.prerequisite-compact-card .med-name { font-size: 17px; }
+}
+
+/* ---------- v2.72.2 OPIOID-SPECIFIC CLINICAL CONTEXT ---------- */
+.opioid-special-card {
+  margin: 0 0 10px;
+  padding: 11px 12px;
+  border: 1px solid rgba(217,119,6,.24);
+  border-left: 4px solid var(--amber);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--paper) 88%, var(--amber-soft));
+  display: grid;
+  gap: 8px;
+}
+.opioid-special-card.is-unknown { border-left-color: var(--muted); background: var(--bg); }
+.opioid-special-kicker { color: var(--amber); font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .055em; }
+.opioid-special-card.is-unknown .opioid-special-kicker { color: var(--muted); }
+.opioid-special-title { color: var(--ink); font-size: 14px; line-height: 1.25; font-weight: 900; }
+.opioid-special-message { color: var(--ink-soft); font-size: 11.7px; line-height: 1.4; font-weight: 700; }
+.opioid-special-context-pill { display:inline-flex; width:fit-content; max-width:100%; padding:3px 7px; border:1px solid rgba(217,119,6,.22); border-radius:999px; background:var(--paper); color:var(--amber); font-size:10.3px; font-weight:850; }
+.opioid-special-section { padding-top: 7px; border-top: 1px dashed var(--border); display:grid; gap:4px; }
+.opioid-special-section-label { color: var(--muted); font-size: 9.8px; font-weight: 900; text-transform: uppercase; letter-spacing:.045em; }
+.opioid-special-section-main { color: var(--ink-soft); font-size: 11.7px; line-height:1.38; font-weight:750; }
+.opioid-special-section-meta { color: var(--muted); font-size: 10.6px; line-height:1.35; font-weight:700; }
+.opioid-special-section.adjunct .opioid-special-section-label { color: var(--blue); }
+.opioid-special-section.oih .opioid-special-section-label { color: var(--red); }
+.opioid-special-section.oih { background: var(--red-soft); border: 1px solid rgba(220,38,38,.18); border-radius: var(--radius-sm); padding: 7px 8px; }
+[data-theme="dark"] .opioid-special-card { background: rgba(245,158,11,.055); }
+@media (max-width:600px) {
+  .opioid-special-card { padding: 9px 10px; gap: 7px; }
+  .opioid-special-title { font-size: 13px; }
+  .opioid-special-message, .opioid-special-section-main { font-size: 11.2px; }
+}
+
+/* ---------- v2.75 RECOMMENDATION HIERARCHY + OVERFLOW POLISH ---------- */
+.right-col,
+.rec-panel,
+#rec-content,
+.rec-first,
+.rec-first-main,
+.rec-dose-block,
+.rec-first-footer {
+  min-width: 0;
+  max-width: 100%;
+}
+#rec-content { overflow-wrap: anywhere; }
+
+.rec-first.opioid-tolerance-primary .rec-first-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 5px;
+}
+.rec-first.opioid-tolerance-primary .med-name-wrapper { margin-bottom: 0; }
+.rec-first.opioid-tolerance-primary .rec-dose-block {
+  display: block;
+  width: 100%;
+}
+.rec-first.opioid-tolerance-primary .rec-dose-block .med-dose,
+.rec-first.opioid-tolerance-primary .rec-dose-block .med-dose-inline {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.rec-first.opioid-tolerance-primary .rec-dose-block .med-dose {
+  font-size: 16px;
+  line-height: 1.32;
+  font-weight: 800;
+  color: var(--ink-soft);
+  letter-spacing: -0.005em;
+}
+.rec-opioid-context-inline {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+  max-width: 100%;
+  color: var(--muted);
+  font-size: 11.3px;
+  line-height: 1.35;
+  font-weight: 750;
+}
+.rec-opioid-context-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 999px;
+  background: var(--amber);
+}
+
+.rec-first-footer {
+  flex-wrap: wrap;
+  gap: 5px 16px;
+}
+.rec-first .med-reassess { flex: 1 1 220px; min-width: 0; }
+.rec-first .med-interval { flex: 1 1 260px; min-width: 0; white-space: normal; overflow-wrap: anywhere; }
+
+.opioid-adjunct-compact {
+  margin: 0 0 9px;
+  border: 1px solid rgba(37,99,235,.18);
+  border-left: 3px solid var(--blue);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--paper) 94%, var(--blue-soft));
+  overflow: hidden;
+}
+.opioid-adjunct-compact-row { padding: 9px 11px; }
+.opioid-adjunct-compact-row + .opioid-adjunct-compact-row { border-top: 1px dashed var(--border); }
+.opioid-adjunct-compact-label {
+  color: var(--blue);
+  font-size: 9.8px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .045em;
+  margin-bottom: 3px;
+}
+.opioid-adjunct-compact-main { color: var(--ink); font-size: 12.4px; line-height: 1.35; font-weight: 850; }
+.opioid-adjunct-compact-meta { margin-top: 2px; color: var(--muted); font-size: 10.7px; line-height: 1.35; font-weight: 700; }
+
+.opioid-special-card.opioid-special-disclosure {
+  display: block;
+  margin: 0 0 10px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-left: 0;
+  background: color-mix(in srgb, var(--paper) 94%, var(--bg));
+  overflow: hidden;
+}
+.opioid-special-disclosure > summary { list-style: none; }
+.opioid-special-disclosure > summary::-webkit-details-marker { display: none; }
+.opioid-special-summary {
+  min-height: 40px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+  color: var(--ink-soft);
+  user-select: none;
+}
+.opioid-special-summary:hover,
+.opioid-special-disclosure[open] > .opioid-special-summary { background: var(--bg); }
+.opioid-special-summary-main { min-width: 0; display: flex; align-items: center; gap: 7px; }
+.opioid-special-summary-icon {
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--amber-soft);
+  color: var(--amber);
+  font-size: 11px;
+  font-weight: 900;
+}
+.opioid-special-summary-text {
+  min-width: 0;
+  font-size: 11.7px;
+  line-height: 1.3;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+.opioid-special-summary-chevron { flex: 0 0 auto; color: var(--muted); transition: transform .16s ease; }
+.opioid-special-disclosure[open] .opioid-special-summary-chevron { transform: rotate(180deg); }
+.opioid-special-body { padding: 2px 10px 10px; border-top: 1px dashed var(--border); }
+.opioid-special-body > .opioid-special-message { margin-top: 8px; }
+.opioid-special-disclosure .opioid-special-section { margin-top: 8px; }
+.opioid-special-disclosure.is-unknown .opioid-special-summary-icon { background: var(--bg); color: var(--muted); }
+
+[data-theme="dark"] .opioid-adjunct-compact { background: rgba(59,130,246,.045); }
+[data-theme="dark"] .opioid-special-card.opioid-special-disclosure { background: rgba(255,255,255,.018); }
+
+@media (max-width:600px) {
+  .rec-first.opioid-tolerance-primary .rec-dose-block .med-dose { font-size: 14.2px; line-height: 1.38; }
+  .rec-opioid-context-inline { font-size: 10.7px; margin-top: 7px; }
+  .rec-first-footer { display: grid; grid-template-columns: minmax(0,1fr); gap: 4px; }
+  .rec-first .med-reassess, .rec-first .med-interval { width: 100%; }
+  .opioid-adjunct-compact-row { padding: 8px 9px; }
+  .opioid-adjunct-compact-main { font-size: 11.8px; }
+  .opioid-special-summary { padding: 8px 9px; }
+  .opioid-special-summary-text { font-size: 11.1px; }
+  .opioid-special-body { padding: 1px 9px 9px; }
 }
 
 /* ---------- DISCLAIMER + FOOTER ---------- */
@@ -8072,6 +8406,107 @@ section[aria-labelledby="h-given"] .given-summary-row {
 
 
 /* ============================================================
+   v2.75 · Recommendation hierarchy + opioid-context disclosure polish (2026-09-07)
+   ------------------------------------------------------------
+   1. Presentation-only refinement: the primary bedside recommendation again
+      answers “what now?” before explanatory opioid-context material.
+   2. Tolerance context is condensed into a quiet inline cue inside the primary
+      recommendation; full maintenance/background guidance moves to an on-demand
+      disclosure below the action.
+   3. Patient-specific Ketamine is shown as a compact secondary adjunct, clearly
+      separated from the primary Morphine action and from PROSPECT evidence.
+   4. Tolerance-aware titration copy uses instruction-level typography rather
+      than headline sizing; recommendation footer wrapping is normalized.
+   5. Fixes right-column horizontal overflow caused by long Georgian dose and
+      reassessment strings. Clinical engine, doses, STOP/HOLD rules, PROSPECT,
+      persistence, PACU/Ward semantics and opioid-context state are unchanged.
+   ============================================================ */
+/* ============================================================
+   v2.74 · Patient Factors visual refinement + full regression (2026-09-07)
+   ------------------------------------------------------------
+   1. Presentation-only refinement after the v2.73.2 component pass. The
+      clinical engine, dosing, opioid-context semantics, STOP/HOLD gates,
+      persistence and PACU/Ward behavior are unchanged.
+   2. Promotes Opioid Context to a full-width featured clinical card so its
+      expanded state no longer creates a tall narrow column or unused space.
+   3. Desktop uses a two-column choice grid inside the featured opioid card;
+      mobile remains a single linear flow. Methadone/buprenorphine details use
+      a balanced two-field layout on wider screens and one column on phones.
+   4. Removes redundant selected-count badges from the opioid card and from the
+      already-open Patient Factors summary, reducing duplicate visual signals.
+   5. Active-state amber styling is softened to selection-level emphasis;
+      documentation-only content remains visually secondary.
+   6. Full clinical acceptance, responsive layout, localization, persistence,
+      handover and syntax regression are release-gated for v2.74.
+   ============================================================ */
+/* ============================================================
+   v2.73.2 Development · Patient Factors component polish — Phase 2 (2026-09-07)
+   ------------------------------------------------------------
+   1. Presentation-only refinement of the opioid-context editor. Clinical
+      decision logic, opioid-tolerance semantics, persistence and PACU/Ward
+      behavior are unchanged.
+   2. Replaces the cramped nested select layout with an accessible single-
+      choice card group while retaining the native select in the DOM for
+      backward-compatible QA and automation hooks.
+   3. Methadone/buprenorphine details move into a dedicated maintenance
+      subcard with an integrated dose field and clear one-of-three status
+      control for today's dose.
+   4. Normalizes spacing, typography, focus states and documentation-card
+      styling across desktop/mobile and Georgian/English modes.
+   ============================================================ */
+/* ============================================================
+   v2.73.1 Development · Patient Factors IA / Layout — Phase 1 (2026-09-07)
+   ------------------------------------------------------------
+   1. Presentation-only refactor of the Patient Factors editor. No clinical
+      decision, dosing, safety, persistence, PACU/Ward or PROSPECT semantics
+      are changed in this phase.
+   2. Decision-driving factor cards are visually grouped ahead of the
+      documentation-only history. Opioid context is promoted to the first
+      clinical card and receives a compact selected-state summary.
+   3. The desktop factor editor uses independent columns rather than shared
+      grid rows, removing the large empty-card / row-stretch artifacts when
+      one accordion is expanded. Mobile remains a single readable flow.
+   4. Category headers gain concise selected-state summaries; the top summary
+      hides duplicate chips while the editor is open. Documentation-only
+      content keeps its existing non-decision semantics and persistence.
+   5. Georgian and English labels are kept in parity.
+   ============================================================ */
+/* ============================================================
+   v2.72 Stable · Opioid-context Stable Gate — Phase 3 (2026-09-07)
+   - No new clinical behavior. Promotes the validated v2.72 opioid-context line after full safety, localization, persistence/handover and responsive regression.
+   - Locks opioid-naive behavior unchanged while preserving tolerance-aware physician-directed titration for chronic prescribed opioid, methadone, buprenorphine and active opioid use contexts.
+   - Revalidates RR<10, SpO₂<92%, POSS 3/4 and repeated-opioid HOLD semantics; opioid tolerance never weakens respiratory safety gates.
+   - Confirms methadone/buprenorphine maintenance guidance remains separate from acute analgesia, unknown maintenance data never creates an analgesia HOLD, and no automatic opioid multiplier or methadone conversion is introduced.
+   - Confirms patient-specific Ketamine remains distinct from procedure-specific PROSPECT evidence and OIH remains a non-diagnostic advisory only.
+   - Georgian and English parity, v19 persistence/legacy migration, handover snapshot, PACU/Ward isolation and responsive layout are release-gated.
+   - Release channel promoted to stable; persistence key remains pacu_pain_state_v19.
+   ============================================================ */
+/* ============================================================
+   v2.72.2 · Opioid-tolerant / substitution-therapy clinical pathways — Phase 2 (2026-09-07)
+   - Connects the Phase-1 opioidContext model to the recommendation engine without changing opioid-naive behavior.
+   - Chronic prescribed opioid, methadone, buprenorphine and active opioid use now create a tolerance-aware pathway: fixed opioid-naive Morphine/Fentanyl doses are not presented as universally sufficient; the UI instead requires physician-directed titration to effect with RR/SpO₂/POSS monitoring.
+   - Methadone and buprenorphine receive separate maintenance-therapy guidance. Unknown maintenance dose/status never creates an acute-analgesia HOLD. No methadone-to-morphine conversion or automatic dose multiplier is introduced.
+   - Ketamine at NRS >=5 in a tolerance context is surfaced as a patient-specific adjunct, explicitly separate from procedure-specific PROSPECT routine evidence.
+   - Repeated opioid rescue plus documented multimodal failure can surface a non-diagnostic opioid tolerance / opioid-induced hyperalgesia advisory.
+   - Existing RR<10, SpO₂<92%, POSS 3/4, repeated-bolus HOLDs, PACU/Ward isolation, PROSPECT evidence attribution and v19 persistence remain unchanged.
+   - All new user-facing text is fully localized in Georgian and English.
+   ============================================================ */
+/* ============================================================
+   v2.72.1 · Opioid context model + localized UI — Phase 1 (2026-09-07)
+   - Replaces the hidden generic opioid_tolerant checkbox with a dedicated, fully localized
+     opioid-context surface: no chronic use, prescribed chronic opioid, methadone
+     substitution therapy, buprenorphine substitution therapy, active opioid use, or unknown.
+   - Adds optional substitution-therapy daily dose and today's-dose status fields.
+   - Persists opioidContext inside the existing v19 session payload and hydrates it safely.
+     Legacy sessions with patient.opioid_tolerant=true migrate to prescribed chronic opioid.
+   - patient.opioid_tolerant remains a derived compatibility flag so the v2.71 clinical engine
+     behaves exactly as before until Phase 2 introduces dedicated OUD/MOUD recommendation logic.
+   - Patient-factor summary and handover snapshot now show the specific opioid context rather
+     than the generic tolerance label. New user-facing copy is complete in Georgian and English.
+   - No dose, ranking, PROSPECT evidence, STOP/HOLD threshold, opioid-safety gate, medication-history
+     semantic, PACU/Ward rule, or persistence key is changed in Phase 1.
+   ============================================================ */
+/* ============================================================
    v2.71 Stable · PACU NRS 6 baseline-reconciliation hotfix (2026-09-06)
    - Fixes a PACU-specific sequencing defect in which Paracetamol/Ketorolac quick-history entries with a confirmed <6 h exposure but an unresolved exact dose could fail to satisfy the moderate-pain baseline and incorrectly fall through to a Nefopam/physician-review terminal state.
    - PACU baseline sequencing now distinguishes “received/on board” evidence from exact cumulative-dose quantification: a valid PACU reconciliation exposure can satisfy baseline presence even when mg is unknown, while dose ceilings/repeat-dose safety continue to rely on quantified exposure.
@@ -8446,6 +8881,389 @@ section[aria-labelledby="h-given"] .given-summary-row {
   .patient-factors-subsection .patient-factors-body { display: block !important; max-height: none !important; }
 }
 
+
+
+/* ---------- v2.73.1 PHASE 1 · PATIENT FACTORS INFORMATION ARCHITECTURE ---------- */
+.patient-factors-subsection .patient-factors-summary.has-warning {
+  background: color-mix(in srgb, var(--paper) 90%, var(--amber-soft));
+  border-color: rgba(217,119,6,.23);
+  color: var(--ink-soft);
+}
+.patient-factors-subsection .patient-factors-summary.has-danger {
+  background: color-mix(in srgb, var(--paper) 88%, var(--red-soft));
+  border-color: rgba(220,38,38,.26);
+}
+.patient-factors-summary[aria-expanded="true"] .patient-factors-summary-chips {
+  display: none;
+}
+.patient-factors-summary[aria-expanded="true"] .patient-factors-summary-text {
+  color: var(--ink-soft);
+}
+.patient-factors-subsection .patient-factors-body {
+  margin-top: 8px;
+}
+.override-cat-card.documentation-only {
+  border-style: solid;
+  background: color-mix(in srgb, var(--paper) 88%, var(--bg));
+}
+.override-cat-card.documentation-only .override-cat-header-btn {
+  color: var(--muted);
+}
+@media (max-width: 639px) {
+  .factor-category-group-heading {
+    display: grid;
+    gap: 2px;
+  }
+  .factor-category-group-hint {
+    text-align: left;
+    font-size: 9.9px;
+  }
+  .override-categories {
+    display: block;
+  }
+  .override-category-column {
+    display: contents;
+  }
+  .override-cat-card {
+    margin-bottom: 7px;
+  }
+  .override-cat-card:last-child {
+    margin-bottom: 0;
+  }
+  .override-cat-header-btn {
+    padding: 10px 11px;
+  }
+  .override-cat-title { font-size: 12.2px; }
+  .override-cat-subtitle { font-size: 10px; }
+}
+
+/* ---------- v2.73.2 PHASE 2 · PATIENT FACTORS COMPONENT POLISH ---------- */
+.opioid-context-editor-polished {
+  gap: 10px;
+}
+.opioid-context-status-field,
+.opioid-context-today-field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.opioid-context-selection-hint {
+  margin-top: -1px;
+  color: var(--muted);
+  font-size: 10.4px;
+  line-height: 1.25;
+  font-weight: 700;
+}
+.override-grid-items label.opioid-context-field {
+  display: grid;
+  gap: 5px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  box-shadow: none;
+  cursor: default;
+}
+.override-grid-items label.opioid-context-field:hover {
+  border: 0;
+  background: transparent;
+}
+.override-grid-items label.opioid-context-field::before {
+  content: none !important;
+  display: none !important;
+}
+.override-grid-items label.opioid-context-choice {
+  display: grid;
+  grid-template-columns: 18px minmax(0,1fr);
+  gap: 8px;
+  padding: 7px 9px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink-soft);
+  box-shadow: none;
+}
+.override-grid-items label.opioid-context-choice:hover {
+  border-color: rgba(8,145,178,.36);
+  background: color-mix(in srgb, var(--paper) 92%, var(--accent-soft));
+}
+.override-grid-items label.opioid-context-choice.is-selected {
+  border-color: rgba(217,119,6,.34);
+  background: color-mix(in srgb, var(--paper) 82%, var(--amber-soft));
+  color: var(--ink);
+  box-shadow: inset 3px 0 0 var(--amber);
+}
+.override-grid-items label.opioid-context-today-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-height: 36px;
+  padding: 6px 5px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink-soft);
+  box-shadow: none;
+}
+.override-grid-items label.opioid-context-today-choice:hover {
+  border-color: var(--accent);
+  background: var(--paper);
+  color: var(--accent);
+}
+.override-grid-items label.opioid-context-today-choice.is-selected {
+  border-color: rgba(8,145,178,.34);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.opioid-context-card .override-grid-items-body.expanded {
+  max-height: 860px;
+  overflow: visible;
+}
+.override-grid-items .opioid-context-choice::before,
+.override-grid-items .opioid-context-today-choice::before {
+  content: none !important;
+  display: none !important;
+}
+.opioid-context-choice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+  margin-top: 2px;
+}
+.opioid-context-choice {
+  position: relative;
+  min-width: 0;
+  min-height: 38px;
+  padding: 7px 9px;
+  display: grid;
+  grid-template-columns: 18px minmax(0,1fr);
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+.opioid-context-choice:hover {
+  border-color: rgba(8,145,178,.36);
+  background: color-mix(in srgb, var(--paper) 92%, var(--accent-soft));
+}
+.opioid-context-choice:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.opioid-context-choice.is-selected {
+  border-color: rgba(217,119,6,.34);
+  background: color-mix(in srgb, var(--paper) 82%, var(--amber-soft));
+  color: var(--ink);
+  box-shadow: inset 3px 0 0 var(--amber);
+}
+.opioid-context-choice-input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.opioid-context-choice-indicator {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border);
+  background: var(--paper);
+  box-shadow: inset 0 0 0 3px var(--paper);
+  transition: border-color .15s ease, background .15s ease;
+}
+.opioid-context-choice.is-selected .opioid-context-choice-indicator {
+  border-color: var(--amber);
+  background: var(--amber);
+}
+.opioid-context-choice-copy {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+.opioid-context-choice-title {
+  min-width: 0;
+  font-size: 11.8px;
+  line-height: 1.28;
+  font-weight: 830;
+  overflow-wrap: anywhere;
+}
+.opioid-context-maintenance-card {
+  margin-top: 1px;
+  padding: 9px 10px 10px;
+  border: 1px solid rgba(8,145,178,.20);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--paper) 90%, var(--accent-soft));
+}
+.opioid-context-maintenance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.opioid-context-maintenance-title {
+  min-width: 0;
+  color: var(--ink-soft);
+  font-size: 11.4px;
+  line-height: 1.25;
+  font-weight: 900;
+}
+.opioid-context-maintenance-badge {
+  flex: 0 1 auto;
+  max-width: 56%;
+  padding: 3px 7px;
+  border: 1px solid rgba(8,145,178,.22);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--accent);
+  font-size: 9.7px;
+  line-height: 1.18;
+  font-weight: 850;
+  text-align: right;
+}
+.opioid-context-maintenance-card .opioid-context-maintenance-grid {
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding-top: 0;
+  border-top: 0;
+}
+.opioid-context-maintenance-field {
+  min-width: 0;
+}
+.opioid-context-dose-control {
+  min-height: 39px;
+  grid-template-columns: minmax(0,1fr) auto;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--paper);
+}
+.opioid-context-dose-control:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.opioid-context-dose-control .opioid-context-dose-input {
+  min-height: 37px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  padding: 7px 9px;
+  font-size: 13px;
+  font-weight: 850;
+}
+.opioid-context-dose-control .opioid-context-dose-input:focus {
+  border: 0;
+  box-shadow: none;
+}
+.opioid-context-dose-control .opioid-context-unit {
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 9px;
+  border-left: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 10.5px;
+}
+.opioid-context-today-choices {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 5px;
+}
+.opioid-context-today-choice {
+  position: relative;
+  min-width: 0;
+  min-height: 36px;
+  padding: 6px 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--paper);
+  color: var(--ink-soft);
+  text-align: center;
+  font-size: 10.2px;
+  line-height: 1.2;
+  font-weight: 800;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, color .15s ease;
+}
+.opioid-context-today-choice:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.opioid-context-today-choice:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.opioid-context-today-choice.is-selected {
+  border-color: rgba(8,145,178,.34);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.opioid-context-note-polished {
+  display: grid;
+  grid-template-columns: 18px minmax(0,1fr);
+  align-items: start;
+  gap: 7px;
+  padding: 7px 8px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--paper) 92%, var(--bg));
+  border: 1px solid var(--border);
+  font-size: 10.4px;
+}
+.opioid-context-note-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 950;
+  font-style: normal;
+}
+.override-cat-card.documentation-only {
+  background: color-mix(in srgb, var(--paper) 94%, var(--bg));
+  border-color: color-mix(in srgb, var(--border) 86%, var(--paper));
+}
+.override-cat-card.documentation-only .override-cat-header-btn {
+  opacity: .88;
+}
+[data-theme="dark"] .opioid-context-choice.is-selected {
+  background: rgba(245,158,11,.075);
+}
+[data-theme="dark"] .opioid-context-maintenance-card {
+  background: rgba(6,182,212,.045);
+}
+@media (max-width: 600px) {
+  .opioid-context-choice { min-height: 36px; padding: 6px 8px; }
+  .opioid-context-choice-title { font-size: 11.3px; }
+  .opioid-context-maintenance-card { padding: 8px 9px 9px; }
+  .opioid-context-maintenance-header { align-items: flex-start; }
+  .opioid-context-maintenance-badge { max-width: 58%; font-size: 9.2px; }
+  .opioid-context-today-choice { min-height: 35px; padding: 6px 4px; font-size: 9.8px; }
+}
+@media (max-width: 360px) {
+  .opioid-context-today-choices { grid-template-columns: 1fr; }
+  .opioid-context-today-choice { justify-content: flex-start; text-align: left; padding-inline: 9px; }
+  .opioid-context-maintenance-header { display: grid; gap: 5px; }
+  .opioid-context-maintenance-badge { max-width: 100%; width: fit-content; text-align: left; }
+}
 
 /* ---------- v1.45 OPEN MANDATORY MEDICATION CHECK BY DEFAULT ---------- */
 section[aria-labelledby="h-given"].is-editing .given-summary-row {
@@ -11306,6 +12124,96 @@ section[aria-labelledby="h-given"] .given-summary-row {
   .clinical-tools-summary { max-width: 255px; }
 }
 
+
+
+/* ---------- v2.74 PATIENT FACTORS · FINAL VISUAL REFINEMENT ---------- */
+.override-category-featured {
+  min-width: 0;
+}
+.override-category-featured + .override-categories {
+  margin-top: 8px;
+}
+.override-categories-additional {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+/* The active context should read as selected, not as a warning panel. */
+.opioid-context-card.has-selection {
+  background: var(--paper);
+  border-color: rgba(217,119,6,.24);
+}
+.opioid-context-card.has-selection .override-cat-header-btn {
+  background: color-mix(in srgb, var(--paper) 94%, var(--amber-soft));
+}
+.opioid-context-card.is-expanded .override-cat-header-btn {
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+}
+.opioid-context-card .override-grid-items-body.expanded {
+  padding: 10px 12px 12px;
+}
+
+/* Once the editor is open, duplicate top-level counts/actions add noise. */
+.patient-factors-summary[aria-expanded="true"] .patient-factors-count,
+.patient-factors-summary[aria-expanded="true"] .patient-factors-summary-action {
+  display: none !important;
+}
+.patient-factors-subsection .patient-factors-summary[aria-expanded="true"].has-warning {
+  background: var(--paper);
+  border-color: var(--border);
+}
+.patient-factors-subsection .patient-factors-summary[aria-expanded="true"].has-danger {
+  background: color-mix(in srgb, var(--paper) 94%, var(--red-soft));
+}
+
+/* Selected choice remains obvious, but the whole form is no longer amber. */
+.override-grid-items label.opioid-context-choice.is-selected,
+.opioid-context-choice.is-selected {
+  background: color-mix(in srgb, var(--paper) 90%, var(--amber-soft));
+  border-color: rgba(217,119,6,.30);
+  box-shadow: inset 3px 0 0 var(--amber);
+}
+
+.factor-category-group-clinical .factor-category-group-heading {
+  padding-bottom: 1px;
+}
+.factor-category-group-additional {
+  margin-top: 10px;
+  padding-top: 10px;
+}
+.factor-category-group-additional .override-cat-card.documentation-only {
+  background: color-mix(in srgb, var(--paper) 94%, var(--bg));
+}
+
+@media (min-width: 640px) {
+  .override-category-featured .opioid-context-choice-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 8px;
+  }
+  .override-category-featured .opioid-context-maintenance-card .opioid-context-maintenance-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 10px;
+  }
+  .override-category-featured .opioid-context-note-polished {
+    margin-top: 1px;
+  }
+}
+
+@media (max-width: 639px) {
+  .override-category-featured + .override-categories { margin-top: 7px; }
+  .opioid-context-card .override-grid-items-body.expanded { padding: 8px 9px 10px; }
+  .opioid-context-maintenance-badge { display: none; }
+  .opioid-context-maintenance-header { margin-bottom: 6px; }
+  .factor-category-group-hint { line-height: 1.25; }
+}
+
+[data-theme="dark"] .opioid-context-card.has-selection {
+  background: var(--paper);
+  border-color: rgba(245,158,11,.25);
+}
+[data-theme="dark"] .opioid-context-card.has-selection .override-cat-header-btn {
+  background: rgba(245,158,11,.035);
+}
+
 </style>
 
 <style id="hv-styles">
@@ -12783,13 +13691,42 @@ header.app-header.controls-header {
 }
 </style>
 
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="PACU ტკივილი">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
-<link rel="icon" href="icons/icon-192.png">
+
+<style id="v275-final-responsive-patch">
+/* v2.75 final responsive guard — keep the language-control wrapper itself at
+   the same touch height as its button in light and dark themes. */
+@media (max-width:600px) {
+  .header-controls > #btn-care-setting-toggle,
+  .header-controls > #btn-handover,
+  .header-controls > #btn-clear,
+  .header-controls > #btn-theme-toggle,
+  .header-controls > .lang-toggle-single,
+  .header-controls > .lang-toggle-single #btn-lang-toggle {
+    height:42px !important;
+    min-height:42px !important;
+  }
+  .header-controls > .lang-toggle-single {
+    display:flex !important;
+    align-items:stretch !important;
+  }
+}
+@media (max-width:380px) {
+  .header-controls > #btn-care-setting-toggle,
+  .header-controls > #btn-handover,
+  .header-controls > #btn-clear,
+  .header-controls > #btn-theme-toggle,
+  .header-controls > .lang-toggle-single,
+  .header-controls > .lang-toggle-single #btn-lang-toggle { height:40px !important; min-height:40px !important; }
+}
+@media (max-width:340px) {
+  .header-controls > #btn-care-setting-toggle,
+  .header-controls > #btn-handover,
+  .header-controls > #btn-clear,
+  .header-controls > #btn-theme-toggle,
+  .header-controls > .lang-toggle-single,
+  .header-controls > .lang-toggle-single #btn-lang-toggle { height:38px !important; min-height:38px !important; }
+}
+</style>
 </head>
 
 <body>
@@ -12812,7 +13749,7 @@ header.app-header.controls-header {
   <!-- Page heading + compact controls -->
   <div class="page-heading" aria-label="Application title">
     <div class="brand-wrapper">
-      <div class="medical-logo" role="img" aria-label="DrX · PACU ტკივილის მართვა v2.71 Stable · Dr. Vasil Khachiashvili">
+      <div class="medical-logo" role="img" aria-label="DrX · PACU ტკივილის მართვა v2.75 · დოქტორი ვასილ ხაჩიაშვილი">
         <svg class="logo-img logo-full" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="-12 16 192 88"><g fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><path d="M0 90 V30 H16 A30 30 0 0 1 16 90 Z"/><g transform="translate(69,0)"><path d="M0 48 V90"/><path d="M0 62 A14 14 0 0 1 14 48"/></g><path d="M118.1 69.9 L98 90"/><path d="M137.9 69.9 L158 90"/></g><path d="M98 30 L128 60 L158 30" stroke="#C8102E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
         <svg class="logo-img logo-mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="18 18 84 84"><g stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M50.1 69.9 L30 90" stroke="currentColor"/><path d="M69.9 69.9 L90 90" stroke="currentColor"/><path d="M30 30 L60 60 L90 30" stroke="#C8102E"/></g></svg>
       </div>
@@ -12903,7 +13840,7 @@ header.app-header.controls-header {
         <div class="patient-factors-subsection ui-contextual-zone" data-ui-priority="contextual" data-ui-role="optional-risk-context">
           <button class="patient-factors-summary is-unreviewed" id="patient-factors-summary" type="button" aria-expanded="false" aria-controls="patient-factors-body">
             <span class="patient-factors-summary-main">
-              <span class="patient-factors-summary-text" id="patient-factors-summary-text">ქრონიკული დაავადებები / რისკები</span>
+              <span class="patient-factors-summary-text" id="patient-factors-summary-text">პაციენტის ფაქტორები</span>
               <span class="patient-factors-summary-chips" id="patient-factors-summary-chips" aria-live="polite"></span>
             </span>
             <span class="patient-factors-summary-trailing">
@@ -13115,7 +14052,7 @@ header.app-header.controls-header {
   </div>
 
   <div class="footer" data-ui-priority="contextual">
-    <div id="footer-branding">PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili</div>
+    <div id="footer-branding">PACU Pain Management v2.75 | By Dr. Vasil Khachiashvili</div>
     <div><a id="footer-prospect-link" href="https://esraeurope.org/prospect/" target="_blank" rel="noopener">ESRA / PROSPECT რეკომენდაციები ↗</a></div>
     <div class="footer-topge" aria-label="TOP.GE რეიტინგი">
       <!-- TOP.GE ASYNC COUNTER CODE -->
@@ -14668,7 +15605,7 @@ const i18n = {
     sec_more_surgeries: "ყველა ქირურგია",
     sec_safety_gate: "ოპიოიდის მიცემამდე უსაფრთხოების შემოწმება",
     sec_overrides: "ქრონიკული დაავადებები",
-    factors_summary_none: "ქრონიკული დაავადებები / რისკები",
+    factors_summary_none: "პაციენტის ფაქტორები",
     factors_summary_selected: "არჩეულია: {count}",
     factors_summary_high_risk: "{danger} მაღალი რისკი",
     factors_summary_open: "დამატება",
@@ -14893,7 +15830,11 @@ const i18n = {
     cpot_cat_muscle: "კუნთური ტონუსი",
     cpot_cat_vent: "ვენტილაცია / ვოკალიზაცია",
     cat_chronic_conditions: "კლინიკურად მნიშვნელოვანი ქრონიკული დაავადებები",
-    cat_documentation_only: "დოკუმენტაცია — რეკომენდაციაზე არ მოქმედებს",
+    cat_documentation_only: "დოკუმენტაცია",
+    cat_documentation_hint: "რეკომენდაციაზე არ მოქმედებს",
+    factor_group_clinical: "კლინიკურად მნიშვნელოვანი ფაქტორები",
+    factor_group_clinical_hint: "შეიძლება ცვლიდეს ანალგეზიის არჩევანს ან უსაფრთხოებას",
+    factor_group_additional: "დამატებითი ინფორმაცია",
     factor_htn: "არტერიული ჰიპერტენზია (HTN)",
     factor_dm: "შაქრიანი დიაბეტი (DM)",
     factor_copd: "COPD / ფქოდი",
@@ -14927,6 +15868,49 @@ const i18n = {
     cat_organ_risks: "ორგანული და სისტემური რისკები",
     cat_demographics: "პაციენტის დემოგრაფია",
     cat_respiratory_neuro: "რესპირატორული და ნეირო რისკები",
+    cat_opioid_context: "ოპიოიდური კონტექსტი",
+    cat_opioid_context_hint: "ქრონიკული გამოყენება / ჩანაცვლებითი თერაპია",
+    opioid_context_status: "მდგომარეობა",
+    opioid_context_none: "არ იყენებს ქრონიკულად",
+    opioid_context_chronic_prescribed: "ქრონიკული დანიშნული ოპიოიდი",
+    opioid_context_methadone: "მეტადონის ჩანაცვლებითი თერაპია",
+    opioid_context_buprenorphine: "ბუპრენორფინის ჩანაცვლებითი თერაპია",
+    opioid_context_active_use: "ოპიოიდის აქტიური გამოყენება",
+    opioid_context_unknown: "უცნობია / ვერ დაზუსტდა",
+    opioid_context_methadone_dose: "მეტადონის ყოველდღიური დოზა",
+    opioid_context_buprenorphine_dose: "ბუპრენორფინის ყოველდღიური დოზა",
+    opioid_context_dose_unit: "მგ/დღე",
+    opioid_context_today_dose: "დღევანდელი დოზა",
+    opioid_context_today_prompt: "აირჩიე",
+    opioid_context_today_taken: "მიღებულია",
+    opioid_context_today_not_taken: "არ მიღებულა",
+    opioid_context_today_unknown: "უცნობია",
+    opioid_context_note: "მიუთითე მხოლოდ დადასტურებული ინფორმაცია; დაუზუსტებელი ველი შეიძლება ცარიელი დარჩეს.",
+    opioid_context_maintenance_details: "ჩანაცვლებითი თერაპიის დეტალები",
+    opioid_context_selection_hint: "აირჩიე ერთი მდგომარეობა",
+    opioid_special_kicker: "ოპიოიდური კონტექსტი",
+    opioid_special_tolerant_title: "ოპიოიდ-ტოლერანტული პაციენტი",
+    opioid_special_unknown_title: "ოპიოიდური ანამნეზი დაუზუსტებელია",
+    opioid_special_tolerant_message: "სტანდარტული ოპიოიდური ბოლუსი შესაძლოა არასაკმარისი იყოს — საჭიროა ექიმის მიერ ეფექტზე მორგებული ინდივიდუალური ტიტრაცია, არსებული უსაფრთხოების კონტროლის შენარჩუნებით.",
+    opioid_special_unknown_message: "ოპიოიდური ანამნეზი ვერ დაზუსტდა — არ გამოიყენო ავტომატური დოზის გაზრდა; დააზუსტე წინა ექსპოზიცია და მართე ტკივილი არსებული უსაფრთხოების წესების დაცვით.",
+    opioid_titration_dose: "ექიმის მიერ ეფექტზე მორგებული ინტრავენური ტიტრაცია",
+    opioid_titration_interval: "კლინიკური პასუხის, სუნთქვის სიხშირის, SpO₂-ისა და POSS-ის მიხედვით",
+    opioid_titration_why: "ოპიოიდური ტოლერანტობის გამო სტანდარტული ფიქსირებული ბოლუსი შესაძლოა არასაკმარისი იყოს; გამოიყენე ინდივიდუალური, მონიტორინგზე დაფუძნებული ტიტრაცია.",
+    opioid_tolerance_alert: "ოპიოიდ-ტოლერანტული პაციენტი — სტანდარტული ბოლუსი შესაძლოა არასაკმარისი იყოს; გააძლიერე მულტიმოდალური ანალგეზია და ჩართე ექიმი ტიტრაციაში.",
+    opioid_tolerance_bolus_alert: "≥3 ოპიოიდური ბოლუსი ოპიოიდ-ტოლერანტულ პაციენტში — არსებული დაბლოკვა უცვლელია; საჭიროა ექიმის გადაფასება და დამატებითი მულტიმოდალური სტრატეგიის განხილვა.",
+    opioid_unknown_alert: "ოპიოიდური ანამნეზი დაუზუსტებელია — დოზის ავტომატური გაზრდა არ გამოიყენო.",
+    opioid_maintenance_label: "ჩანაცვლებითი თერაპია",
+    opioid_methadone_maintenance_main: "გადაამოწმე და გააგრძელე პაციენტის დადასტურებული მეტადონის ყოველდღიური რეჟიმი. მეტადონის ჩანაცვლებითი დოზა არ წარმოადგენს მწვავე პოსტოპერაციული ტკივილის სრულფასოვან ანალგეზიას.",
+    opioid_buprenorphine_maintenance_main: "ბუპრენორფინის რუტინული შეწყვეტა პეროპერაციულ პერიოდში არ არის რეკომენდებული; გადაამოწმე და გააგრძელე დადასტურებული რეჟიმი და მართე მწვავე ტკივილი ინდივიდუალური მულტიმოდალური მიდგომით.",
+    opioid_maintenance_unknown_dose: "ყოველდღიური დოზა დასაზუსტებელია — ამის გამო მწვავე ტკივილის მკურნალობა არ უნდა შეჩერდეს.",
+    opioid_maintenance_today_taken: "დღევანდელი დოზა მიღებულია",
+    opioid_maintenance_today_not_taken: "დღევანდელი დოზა არ მიღებულა — გადაამოწმე ჩანაცვლებითი თერაპიის გეგმა",
+    opioid_maintenance_today_unknown: "დღევანდელი დოზის სტატუსი უცნობია — გადაამოწმე",
+    opioid_patient_adjunct_label: "პაციენტზე მორგებული დამატებითი ანალგეზია",
+    opioid_ketamine_adjunct_main: "კეტამინი 0.1–0.3 მგ/კგ ინტრავენურად — მხოლოდ ექიმის გადაწყვეტილებით",
+    opioid_ketamine_adjunct_note: "პაციენტის ფაქტორი: ოპიოიდური ტოლერანტობა. ეს არ ცვლის არჩეული ოპერაციის PROSPECT რეკომენდაციას და არ ნიშნავს კეტამინის რუტინულ გამოყენებას ამ ოპერაციისთვის.",
+    opioid_oih_label: "შესაძლო ტოლერანტობა / ოპიოიდით გამოწვეული ჰიპერალგეზია",
+    opioid_oih_message: "განმეორებითი ოპიოიდური დოზების და დოკუმენტირებული არასაკმარისი მულტიმოდალური პასუხის ფონზე ტკივილი კვლავ მაღალია — საჭიროა ექიმის გადაფასება; განიხილე ოპიოიდური ტოლერანტობა ან ოპიოიდით გამოწვეული ჰიპერალგეზია და მულტიმოდალური/რეგიონული სტრატეგიის გაძლიერება. ეს არის გაფრთხილება და არა დიაგნოზი.",
     status_danger: "საშიშია",
     status_safe: "უსაფრთხოა",
     active_surgery_prefix: "ქირურგია:",
@@ -15104,7 +16088,7 @@ const i18n = {
     sec_more_surgeries: "All surgeries",
     sec_safety_gate: "Safety check before opioid",
     sec_overrides: "Chronic diseases",
-    factors_summary_none: "Chronic conditions / risks",
+    factors_summary_none: "Patient factors",
     factors_summary_selected: "Selected: {count}",
     factors_summary_high_risk: "{danger} high-risk",
     factors_summary_open: "Add",
@@ -15329,7 +16313,11 @@ const i18n = {
     cpot_cat_muscle: "Muscle tension",
     cpot_cat_vent: "Ventilation / vocalization",
     cat_chronic_conditions: "Clinically relevant chronic diseases",
-    cat_documentation_only: "Documentation — does not affect recommendations",
+    cat_documentation_only: "Documentation",
+    cat_documentation_hint: "Does not affect recommendations",
+    factor_group_clinical: "Clinically important factors",
+    factor_group_clinical_hint: "May change analgesic choice or safety",
+    factor_group_additional: "Additional information",
     factor_htn: "Hypertension (HTN)",
     factor_dm: "Diabetes mellitus (DM)",
     factor_copd: "COPD",
@@ -15363,6 +16351,49 @@ const i18n = {
     cat_organ_risks: "Organ & System Risks",
     cat_demographics: "Patient Demographics",
     cat_respiratory_neuro: "Respiratory & Neuro Risks",
+    cat_opioid_context: "Opioid context",
+    cat_opioid_context_hint: "Chronic use / substitution therapy",
+    opioid_context_status: "Status",
+    opioid_context_none: "No chronic opioid use",
+    opioid_context_chronic_prescribed: "Prescribed chronic opioid",
+    opioid_context_methadone: "Methadone substitution therapy",
+    opioid_context_buprenorphine: "Buprenorphine substitution therapy",
+    opioid_context_active_use: "Active opioid use",
+    opioid_context_unknown: "Unknown / unable to clarify",
+    opioid_context_methadone_dose: "Daily methadone dose",
+    opioid_context_buprenorphine_dose: "Daily buprenorphine dose",
+    opioid_context_dose_unit: "mg/day",
+    opioid_context_today_dose: "Today's dose",
+    opioid_context_today_prompt: "Choose",
+    opioid_context_today_taken: "Taken",
+    opioid_context_today_not_taken: "Not taken",
+    opioid_context_today_unknown: "Unknown",
+    opioid_context_note: "Enter only confirmed information; an unresolved field may be left blank.",
+    opioid_context_maintenance_details: "Substitution-therapy details",
+    opioid_context_selection_hint: "Choose one status",
+    opioid_special_kicker: "Opioid context",
+    opioid_special_tolerant_title: "Opioid-tolerant patient",
+    opioid_special_unknown_title: "Opioid history unresolved",
+    opioid_special_tolerant_message: "A standard opioid bolus may be insufficient — use physician-directed titration to effect while preserving the existing safety checks.",
+    opioid_special_unknown_message: "Opioid history could not be clarified — do not apply an automatic dose increase; clarify prior exposure and treat pain using the existing safety rules.",
+    opioid_titration_dose: "Physician-directed IV titration to effect",
+    opioid_titration_interval: "According to clinical response and RR/SpO₂/POSS",
+    opioid_titration_why: "Because opioid tolerance is likely, a fixed standard bolus may be insufficient; use individualized, monitoring-based titration.",
+    opioid_tolerance_alert: "Opioid-tolerant patient — a standard bolus may be insufficient; strengthen multimodal analgesia and involve the physician in titration.",
+    opioid_tolerance_bolus_alert: "≥3 opioid boluses in an opioid-tolerant patient — the existing HOLD remains unchanged; physician reassessment and an additional multimodal strategy are required.",
+    opioid_unknown_alert: "Opioid history is unresolved — do not automatically increase the opioid dose.",
+    opioid_maintenance_label: "Substitution therapy",
+    opioid_methadone_maintenance_main: "Verify and continue the patient's confirmed daily methadone regimen. The substitution dose does not provide complete analgesia for acute postoperative pain.",
+    opioid_buprenorphine_maintenance_main: "Buprenorphine should not be routinely discontinued perioperatively; verify and continue the confirmed regimen and treat acute pain with an individualized multimodal strategy.",
+    opioid_maintenance_unknown_dose: "The daily dose needs clarification — acute pain treatment should not be held for this reason.",
+    opioid_maintenance_today_taken: "Today's dose was taken",
+    opioid_maintenance_today_not_taken: "Today's dose was not taken — verify the substitution-therapy plan",
+    opioid_maintenance_today_unknown: "Today's dose status is unknown — verify",
+    opioid_patient_adjunct_label: "Patient-specific adjunct analgesia",
+    opioid_ketamine_adjunct_main: "Ketamine 0.1–0.3 mg/kg IV — physician decision only",
+    opioid_ketamine_adjunct_note: "Patient factor: opioid tolerance. This does not change the selected procedure's PROSPECT recommendation and does not make ketamine routine for that procedure.",
+    opioid_oih_label: "Possible tolerance / opioid-induced hyperalgesia",
+    opioid_oih_message: "Pain remains high despite repeated opioid doses and documented inadequate multimodal response — physician reassessment is required; consider opioid tolerance or opioid-induced hyperalgesia and strengthen multimodal/regional strategies. This is an advisory, not a diagnosis.",
     status_danger: "Danger",
     status_safe: "Safe",
     active_surgery_prefix: "Surgery:",
@@ -19986,8 +21017,8 @@ const getChipLabel = (key) => {
 // STATE
 // ============================================================
 // v2.54 Phase 5: recommendation-first disclosure; clinical engine unchanged.
-const APP_VERSION = '2.71 Stable';
-const APP_RELEASE_CHANNEL = 'stable';
+const APP_VERSION = '2.75';
+const APP_RELEASE_CHANNEL = 'development';
 const CLINICAL_EVIDENCE_REVIEWED_AT = '2026-08-28';
 const STATE_KEY = 'pacu_pain_state_v19'; // v1.47: schema adds given.doseLedger; intentionally unchanged for v2.40 compatibility
 const PREVIOUS_STATE_KEY = 'pacu_pain_state_v18'; // migrated then removed on load
@@ -20127,6 +21158,77 @@ const INVALID_LEGACY_THEME_KEY = 'pacu_theme_v1'; // v1.86.1 auto-fallback key; 
 const PREVIOUS_THEME_KEY = 'pacu_theme_v2'; // v1.86.2 standalone preference; migrated only if shared key is absent
 const THEME_KEY = 'pacu-theme'; // v1.88: canonical site-wide key shared with pacu.ge and /xchecker
 
+const OPIOID_CONTEXT_TYPES = new Set(['none','chronic_prescribed','methadone','buprenorphine','active_use','unknown']);
+const OPIOID_TOLERANCE_CONTEXT_TYPES = new Set(['chronic_prescribed','methadone','buprenorphine','active_use']);
+const OPIOID_MAINTENANCE_CONTEXT_TYPES = new Set(['methadone','buprenorphine']);
+const makeDefaultOpioidContext = () => ({
+  type: 'none',
+  maintenanceDoseMgPerDay: null,
+  todayDoseStatus: null // null | taken | not_taken | unknown
+});
+function normalizeOpioidContext(raw = null, legacyTolerance = false) {
+  const source = raw && typeof raw === 'object' ? raw : {};
+  let type = OPIOID_CONTEXT_TYPES.has(source.type) ? source.type : (legacyTolerance ? 'chronic_prescribed' : 'none');
+  let maintenanceDoseMgPerDay = Number(source.maintenanceDoseMgPerDay);
+  maintenanceDoseMgPerDay = Number.isFinite(maintenanceDoseMgPerDay) && maintenanceDoseMgPerDay > 0 ? maintenanceDoseMgPerDay : null;
+  let todayDoseStatus = ['taken','not_taken','unknown'].includes(source.todayDoseStatus) ? source.todayDoseStatus : null;
+  if (!OPIOID_MAINTENANCE_CONTEXT_TYPES.has(type)) {
+    maintenanceDoseMgPerDay = null;
+    todayDoseStatus = null;
+  }
+  return { type, maintenanceDoseMgPerDay, todayDoseStatus };
+}
+function syncLegacyOpioidToleranceFlag(targetState = state) {
+  if (!targetState?.patient) return false;
+  const type = targetState.opioidContext?.type || 'none';
+  const tolerant = OPIOID_TOLERANCE_CONTEXT_TYPES.has(type);
+  targetState.patient.opioid_tolerant = tolerant;
+  return tolerant;
+}
+function opioidContextIsActive(ctx = state?.opioidContext) {
+  return !!ctx && ctx.type !== 'none';
+}
+function opioidContextLabelKey(type = state?.opioidContext?.type) {
+  return 'opioid_context_' + (OPIOID_CONTEXT_TYPES.has(type) ? type : 'none');
+}
+function opioidContextDisplayLabel(type = state?.opioidContext?.type) {
+  return t(opioidContextLabelKey(type));
+}
+
+function getEffectiveOpioidContext(input = {}, patient = {}) {
+  const hasExplicit = input && Object.prototype.hasOwnProperty.call(input, 'opioidContext');
+  return normalizeOpioidContext(hasExplicit ? input.opioidContext : null, !hasExplicit && !!patient?.opioid_tolerant);
+}
+function isOpioidToleranceLikelyContext(ctx) {
+  return !!ctx && OPIOID_TOLERANCE_CONTEXT_TYPES.has(ctx.type);
+}
+function buildMaintenanceTherapyDecision(ctx) {
+  if (!ctx || !OPIOID_MAINTENANCE_CONTEXT_TYPES.has(ctx.type)) return null;
+  const drugName = ctx.type === 'methadone'
+    ? (currentLang === 'ka' ? 'მეტადონი' : 'Methadone')
+    : (currentLang === 'ka' ? 'ბუპრენორფინი' : 'Buprenorphine');
+  const main = ctx.type === 'methadone' ? t('opioid_methadone_maintenance_main') : t('opioid_buprenorphine_maintenance_main');
+  const doseText = ctx.maintenanceDoseMgPerDay != null
+    ? `${drugName} ${ctx.maintenanceDoseMgPerDay} ${t('opioid_context_dose_unit')}`
+    : t('opioid_maintenance_unknown_dose');
+  const statusText = ctx.todayDoseStatus === 'taken' ? t('opioid_maintenance_today_taken')
+    : ctx.todayDoseStatus === 'not_taken' ? t('opioid_maintenance_today_not_taken')
+    : t('opioid_maintenance_today_unknown');
+  return { type:ctx.type, label:t('opioid_maintenance_label'), drugName, doseText, statusText, main };
+}
+function applyToleranceAwareOpioidRecommendation(item, ctx) {
+  if (!item || !isOpioidToleranceLikelyContext(ctx) || !['Morphine','Fentanyl'].includes(item.name)) return item;
+  return {
+    ...item,
+    standardOpioidNaiveDose: item.dose,
+    dose: t('opioid_titration_dose'),
+    interval: t('opioid_titration_interval'),
+    why: t('opioid_titration_why'),
+    opioidToleranceAware: true,
+    directRecordAllowed: false
+  };
+}
+
 const defaultState = () => ({
   theme: 'light',
   careSetting: 'pacu', // PACU | ward
@@ -20206,6 +21308,7 @@ const defaultState = () => ({
     htn:false, dm:false, copd:false, asthma:false, ckd:false, cva:false, pvd:false, smoker:false,
     af:false, ihd:false, stent:false, cabg:false, chf:false, met_lt4:false, gerd:false, other:false
   },
+  opioidContext: makeDefaultOpioidContext(),
   patient: {
     age65: false, weight_low: false,
     ageYears: null, // v1.99: exact age; ≥65 is derived automatically in the UI
@@ -20217,7 +21320,7 @@ const defaultState = () => ({
     liver: false, pregnancy: false,
     nsaid_allergy: false, nsaid_asthma: false,
     opioid_allergy: false, metamizole_allergy: false, nefopam_allergy: false,
-    opioid_tolerant: false, // v1.48: chronic opioid use / preop opioid therapy
+    opioid_tolerant: false, // v2.72.2: derived compatibility flag from opioidContext; legacy v1.48 sessions migrate safely
     bleeding: false, gi_bleed: false,
     seizure: false, glaucoma: false, urinary: false, ileus: false,
     osa: false, delirium: false,
@@ -20238,6 +21341,7 @@ const defaultState = () => ({
       cat_allergies: true,
       cat_organ_risks: true,
       cat_demographics: true,
+      cat_opioid_context: true,
       cat_respiratory_neuro: true
     }
   }
@@ -20349,7 +21453,7 @@ function buildPersistedState(revision, writeToken, writtenAt = new Date().toISOS
     given: state.given, lastOpioidBucket: state.lastOpioidBucket,
     lastOpioidBucketSetAt: state.lastOpioidBucketSetAt || null,
     baseline: state.baseline,
-    safety: state.safety, chronicConditions: state.chronicConditions, patient: state.patient
+    safety: state.safety, chronicConditions: state.chronicConditions, opioidContext: state.opioidContext, patient: state.patient
   };
 }
 
@@ -20376,6 +21480,14 @@ function hydrateRuntimeState(parsed) {
   state.safety.confirmedAt = null;
   state.chronicConditions = { ...defaultState().chronicConditions, ...((parsed || {}).chronicConditions || {}) };
   state.patient = { ...defaultState().patient, ...((parsed || {}).patient || {}) };
+  // v2.72.2 Phase 1: opioid context is a structured, persisted source of truth.
+  // A pre-v2.72 session may only have patient.opioid_tolerant=true; migrate that
+  // conservatively to prescribed chronic opioid use. Explicit new-context data
+  // always wins over the legacy boolean.
+  const hasExplicitOpioidContext = !!((parsed || {}).opioidContext && typeof (parsed || {}).opioidContext === 'object');
+  const legacyOpioidTolerance = !hasExplicitOpioidContext && !!((parsed || {}).patient?.opioid_tolerant);
+  state.opioidContext = normalizeOpioidContext((parsed || {}).opioidContext, legacyOpioidTolerance);
+  syncLegacyOpioidToleranceFlag(state);
   // v2.26: renal risk is now an explicit checkbox beside age/weight. Legacy
   // sessions with reduced/severe renal bands are migrated into the checkbox
   // without inventing CKD; a legacy >=60 band alone does not imply dysfunction.
@@ -21806,7 +22918,7 @@ function getMorphineInfusionNoteHtml(compact = false) {
   const aria = currentLang === 'ka' ? 'Morphine-ის ნელი IV ინფუზიის ინსტრუქცია' : 'Morphine slow IV infusion instructions';
   return `<button type="button" class="${cls}" data-action="morphine-infusion-info" aria-label="${escapeAttr(aria)}">${escapeHtml(getMorphineInfusionLabel())}</button>`;
 }
-function renderPrimaryDoseHtml(name, dose, inlineTooltipHtml = '') {
+function renderPrimaryDoseHtml(name, dose, inlineTooltipHtml = '', options = {}) {
   let html = '';
   if (hasNefopamInName(name)) {
     const main = currentLang === 'ka' ? 'Nefopam 20 მგ IV' : 'Nefopam 20 mg IV';
@@ -21815,14 +22927,14 @@ function renderPrimaryDoseHtml(name, dose, inlineTooltipHtml = '') {
   } else {
     html = `<div class="med-dose">${escapeHtml(getWeightAwareDoseDisplayText(name, dose))}</div>`;
   }
-  if (isMorphineDisplayName(name)) html += getMorphineInfusionNoteHtml(false);
+  if (isMorphineDisplayName(name) && options.suppressMorphineStandardNote !== true) html += getMorphineInfusionNoteHtml(false);
   if (hasMetamizoleInName(name)) html += `<div class="med-dose-note">${escapeHtml(getMetamizoleDoseNote())}</div>`;
   return html;
 }
 function renderComboDosePartHtml(part, index = 0) {
   const p = part || {};
   let html = `<div class="combo-dose-row"><span class="combo-dose-separator">${index === 0 ? '' : '+'}</span><span class="combo-dose-name">${escapeHtml(p.name || '')}</span><span class="combo-dose-value">${escapeHtml(getWeightAwareDoseDisplayText(p.name, p.dose || ''))}</span></div>`;
-  if (isMorphineDisplayName(p.name)) html += getMorphineInfusionNoteHtml(true);
+  if (isMorphineDisplayName(p.name) && !p.opioidToleranceAware) html += getMorphineInfusionNoteHtml(true);
   if (hasMetamizoleInName(p.name)) html += `<div class="med-dose-note-sm">${escapeHtml(getMetamizoleDoseNote())}</div>`;
   return html;
 }
@@ -22398,6 +23510,9 @@ function computeNextBest(input) {
   // the ledger (or tests) may omit it; given.doseLedger is the default.
   const ledger = Array.isArray(input.ledger) ? input.ledger
     : (Array.isArray(given?.doseLedger) ? given.doseLedger : []);
+  const opioidContext = getEffectiveOpioidContext(input, patient);
+  const opioidToleranceLikely = isOpioidToleranceLikelyContext(opioidContext);
+  const opioidContextUnknown = opioidContext.type === 'unknown';
   const result = {
     ranked: [],
     alerts: [],
@@ -22405,6 +23520,7 @@ function computeNextBest(input) {
     holds: [],
     blocked: [],
     advisory: [],
+    patientSpecificAdjuncts: [],
     additional: [],
     evidenceAlternatives: [],
     nonRoutineFallback: null,
@@ -22416,6 +23532,9 @@ function computeNextBest(input) {
     escalation: null,
     sequenceNotice: null,
     historyVerification: null,
+    opioidContextDecision: null,
+    maintenanceTherapy: null,
+    opioidHyperalgesiaAdvisory: null,
     assumed: '',
     debug: {}
   };
@@ -22462,6 +23581,28 @@ function computeNextBest(input) {
     return result;
   }
 
+  // v2.72.2 Phase 2: opioid exposure context changes interpretation and
+  // recommendation wording, never the established physiologic safety gates.
+  if (opioidToleranceLikely) {
+    result.opioidContextDecision = {
+      type: opioidContext.type,
+      title: t('opioid_special_tolerant_title'),
+      message: t('opioid_special_tolerant_message'),
+      label: opioidContextDisplayLabel(opioidContext.type),
+      toleranceLikely: true
+    };
+    result.maintenanceTherapy = buildMaintenanceTherapyDecision(opioidContext);
+  } else if (opioidContextUnknown) {
+    result.opioidContextDecision = {
+      type: 'unknown',
+      title: t('opioid_special_unknown_title'),
+      message: t('opioid_special_unknown_message'),
+      label: opioidContextDisplayLabel('unknown'),
+      toleranceLikely: false
+    };
+  }
+  result.debug.opioidContext = { type:opioidContext.type, toleranceLikely:opioidToleranceLikely, unknown:opioidContextUnknown };
+
   // v2.54 Ward Phase 2: derive a normalized medication state before ranking.
   // The renderer does not yet present this as the final temporal pathway; Phase 3
   // will consume it. For now the key safety invariant is ACTIVE ≠ BLOCKED.
@@ -22503,12 +23644,8 @@ function computeNextBest(input) {
     : (given.opioidCount >= 3 &&
        (lastOpioidBucket === 'now' || lastOpioidBucket === '<10' ||
         lastOpioidBucket === '10-30' || lastOpioidBucket === '30-60'));
-  // Opioid-tolerance advisory.
-  if (nrs != null && nrs >= 5 && patient.opioid_tolerant) {
-    result.alerts.push(currentLang === 'ka'
-      ? 'ოპიოიდ-ტოლერანტული პაციენტი — სტანდარტული ბოლუსები შესაძლოა არასაკმარისი იყოს; ადრეული მულტიმოდალური ადიუვანტები და ექიმის ჩართვა მოსალოდნელია'
-      : 'Opioid-tolerant patient — standard boluses may underdose; early multimodal adjuncts and physician involvement expected');
-  }
+  // Opioid-context advisory. Unknown history is not treated as tolerance.
+  if (nrs != null && nrs >= 5 && opioidContextUnknown) result.alerts.push(t('opioid_unknown_alert'));
 
   // v1.52: dexamethasone advisory. Quiet, always-visible (not a stop, not a
   // gate) — fires only if this surgery's PROSPECT baseline includes intraop
@@ -22537,12 +23674,9 @@ function computeNextBest(input) {
     if (stop && !result.holds.includes(stop)) result.holds.push(stop);
   }
   if (opioidCountInLastHour || opioidExposure.high60) {
-    if (patient.opioid_tolerant) {
-      // v1.48: the stop stays fully intact — this reframes it for a patient
-      // in whom rescue failure is the expected phenotype, not an error.
-      result.alerts.push(currentLang === 'ka'
-        ? '≥3 ბოლუსი ოპიოიდ-ტოლერანტულ პაციენტში — ექიმის ესკალაცია მოსალოდნელია; განიხილე ადიუვანტური გზა (კეტამინი)'
-        : '≥3 boluses in an opioid-tolerant patient — physician escalation is the expected pathway; consider adjuncts (ketamine)');
+    if (opioidToleranceLikely) {
+      // The HOLD stays fully intact; tolerance only reframes the expected next step.
+      result.alerts.push(t('opioid_tolerance_bolus_alert'));
     }
   }
   if (opioidExposure.high4h && !opioidExposure.high60) {
@@ -22563,11 +23697,20 @@ function computeNextBest(input) {
     candidates = ['Ketorolac', 'Nefopam', 'Fentanyl', 'Morphine'];
   }
 
-  // Always include adjuncts/advisory at high NRS.
-  // v1.48: in opioid-tolerant patients ketamine's evidence is strongest and
-  // rescue failure is expected — surface the advisory from NRS >=5.
-  const ketamineThresholdMet = nrs >= 7 || (nrs >= 5 && patient.opioid_tolerant);
-  if (ketamineThresholdMet) {
+  // v2.72.2: tolerance-specific ketamine is a PATIENT-specific adjunct, not
+  // a procedure-specific PROSPECT recommendation. The ordinary high-NRS path
+  // retains its existing procedure-evidence attribution for non-tolerant patients.
+  if (nrs >= 5 && opioidToleranceLikely) {
+    result.patientSpecificAdjuncts.push({
+      name: 'Ketamine',
+      dose: medications.Ketamine.usualDose,
+      display: t('opioid_ketamine_adjunct_main'),
+      note: t('opioid_ketamine_adjunct_note'),
+      tooltip: getMedTooltip('Ketamine'),
+      reason: 'opioid_tolerance',
+      physicianDecisionOnly: true
+    });
+  } else if (nrs >= 7) {
     pushProcedureAwareAdvisory(result, surgery, {
       name: 'Ketamine', dose: medications.Ketamine.usualDose,
       tooltip: getMedTooltip('Ketamine')
@@ -23182,7 +24325,8 @@ function computeNextBest(input) {
         blockReasons.length === 1 && blockReasons[0] === t('reason_safety_gate') && score > 0;
       if (safetyOnlyPendingOpioid) {
         result.debug.pendingOpioidCandidates = result.debug.pendingOpioidCandidates || [];
-        result.debug.pendingOpioidCandidates.push({ name:medKey, score, dose: medKey === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs) ? getUnknownWeightInitialMorphineDoseLabel() : getDoseLabel(medKey, patient, given, safety) });
+        const pendingBase = { name:medKey, score, dose: medKey === 'Morphine' && !opioidToleranceLikely && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs) ? getUnknownWeightInitialMorphineDoseLabel() : getDoseLabel(medKey, patient, given, safety) };
+        result.debug.pendingOpioidCandidates.push(applyToleranceAwareOpioidRecommendation(pendingBase, opioidContext));
       }
       const wardState = careSetting === 'ward' ? wardMedicationStates?.[medKey] : null;
       const wardTimingReason = careSetting === 'ward' ? recentDoseBlockReason(medKey, ledger) : null;
@@ -23217,10 +24361,10 @@ function computeNextBest(input) {
         getWardConditionalRecommendation(medKey, ledger, given, careSetting),
         medKey === 'Nefopam' ? getNefopamSafetyConditional(patient) : null
       );
-      const recommendation = {
+      let recommendation = {
         name: medKey,
         score: score,
-        dose: (medKey === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs))
+        dose: (medKey === 'Morphine' && !opioidToleranceLikely && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs))
           ? getUnknownWeightInitialMorphineDoseLabel()
           : ((medKey === 'Morphine' && (nrs6MorphineRescuePathway || wardNrs5MorphineAfterMetamizoleFailure))
             ? getModeratePainMorphineDoseLabel()
@@ -23234,9 +24378,10 @@ function computeNextBest(input) {
         tooltip: getMedTooltip(medKey),
         conditional
       };
-      if (medKey === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs)) {
+      if (medKey === 'Morphine' && !opioidToleranceLikely && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs)) {
         result.debug.unknownWeightInitialMorphineRescue = true;
       }
+      recommendation = applyToleranceAwareOpioidRecommendation(recommendation, opioidContext);
       const evidencePolicy = getProcedureMedicationEvidencePolicy(surgery, medKey);
       if (evidencePolicy?.status === 'not_routine_evidence') {
         // Procedure evidence changes routine ranking, NOT pharmacologic eligibility.
@@ -23379,19 +24524,19 @@ function computeNextBest(input) {
     );
     if (!morphineHardBlocked) {
       if (isOpioidGateSafe(safety)) {
-        scored.push({
+        scored.push(applyToleranceAwareOpioidRecommendation({
           name: 'Morphine',
           score: 95,
-          dose: isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting)
+          dose: (!opioidToleranceLikely && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting))
             ? getUnknownWeightInitialMorphineDoseLabel()
             : getModeratePainMorphineDoseLabel(),
           interval: getIntervalLabel('Morphine'),
           why: currentLang === 'ka'
-            ? 'ადგილობრივი კლინიკური წესი — NRS 5 და სტანდარტული არაოპიოიდური rescue უკვე გამოყენებულია → Morphine 2–3 მგ'
+            ? 'ადგილობრივი კლინიკური წესი — NRS 5 და სტანდარტული არაოპიოიდური სარეზერვო ანალგეზია უკვე გამოყენებულია → Morphine 2–3 მგ'
             : 'Local clinical rule — NRS 5 and standard non-opioid rescue already used → Morphine 2–3 mg',
           tooltip: getMedTooltip('Morphine'),
           conditional: null
-        });
+        }, opioidContext));
         result.debug.nrs5ExhaustedMorphinePrimary = true;
       } else {
         result.debug.needSafetyGate = true;
@@ -23443,7 +24588,7 @@ ${topOpioidForCombo.name}: ${topOpioidForCombo.tooltip}`,
       combination: true,
       parts: [
         { name: 'Ketorolac', dose: ketorolacForCombo.dose },
-        { name: topOpioidForCombo.name, dose: topOpioidForCombo.dose, sequence: topOpioidForCombo.sequence }
+        { name: topOpioidForCombo.name, dose: topOpioidForCombo.dose, sequence: topOpioidForCombo.sequence, opioidToleranceAware:!!topOpioidForCombo.opioidToleranceAware, directRecordAllowed:topOpioidForCombo.directRecordAllowed }
       ]
     };
     result.ranked = [
@@ -23501,7 +24646,7 @@ ${topOpioidForCombo.name}: ${topOpioidForCombo.tooltip}`,
   const pendingMorphine = pendingOpioids.find(x => x.name === 'Morphine');
   const morphineSpecificPendingPath = !!(nrs6MorphineRescuePathway || wardNrs5MorphineAfterMetamizoleFailure || nrs5ExhaustedNonOpioidRescuePathway);
   const prospectiveTopOpioid = morphineSpecificPendingPath && pendingMorphine ? pendingMorphine : pendingOpioids[0];
-  if (result.debug.needSafetyGate && prospectiveTopOpioid?.name === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs)) {
+  if (result.debug.needSafetyGate && prospectiveTopOpioid?.name === 'Morphine' && !opioidToleranceLikely && isUnknownWeightInitialMorphineRescueAvailable(patient, ledger, careSetting, nrs)) {
     result.debug.pendingUnknownWeightInitialMorphineSafety = true;
     result.debug.pendingUnknownWeightInitialMorphineDose = getUnknownWeightInitialMorphineDoseLabel();
   }
@@ -23527,7 +24672,7 @@ ${opioidForSafeguard.name}: ${opioidForSafeguard.tooltip}`,
         combination: true,
         parts: [
           { name: 'Ketorolac', dose: ketorolacForSafeguard.dose },
-          { name: opioidForSafeguard.name, dose: opioidForSafeguard.dose, sequence: opioidForSafeguard.sequence }
+          { name: opioidForSafeguard.name, dose: opioidForSafeguard.dose, sequence: opioidForSafeguard.sequence, opioidToleranceAware:!!opioidForSafeguard.opioidToleranceAware, directRecordAllowed:opioidForSafeguard.directRecordAllowed }
         ]
       };
       result.ranked = [
@@ -23683,6 +24828,19 @@ ${opioidForSafeguard.name}: ${opioidForSafeguard.tooltip}`,
     result.debug.rescueHierarchy = 'nonroutine_nefopam';
   } else if (result.ranked.length > 0) {
     result.debug.rescueHierarchy = 'standard';
+  }
+
+  // v2.72.2: possible OIH is an advisory heuristic, never an automatic diagnosis.
+  // Require a tolerance context, repeated recent opioid exposure, severe pain,
+  // and documented failure across multimodal classes including opioid response.
+  const escalationFailedClasses = new Set((result.escalation?.failedClasses || []).map(x => x.classKey));
+  if (opioidToleranceLikely && nrs >= 7 && result.escalation?.active && opioidExposure.count4h >= 2 && escalationFailedClasses.has('opioid')) {
+    result.opioidHyperalgesiaAdvisory = {
+      label: t('opioid_oih_label'),
+      message: t('opioid_oih_message'),
+      diagnostic: false
+    };
+    result.debug.possibleOihAdvisory = true;
   }
 
   // v2.67 — mild-pain reassessment semantics. At NRS 1–3, an empty immediate
@@ -24063,13 +25221,13 @@ function getContextualAppIdentity() {
     return ward
       ? {
           title: 'პალატის ტკივილის მართვა',
-          documentTitle: `პალატის ტკივილის მართვა v${APP_VERSION} | Dr. Vasil Khachiashvili`,
-          logoLabel: `DrX · პალატის ტკივილის მართვა v${APP_VERSION} · Dr. Vasil Khachiashvili`
+          documentTitle: `პალატის ტკივილის მართვა v${APP_VERSION} | დოქტორი ვასილ ხაჩიაშვილი`,
+          logoLabel: `DrX · პალატის ტკივილის მართვა v${APP_VERSION} · დოქტორი ვასილ ხაჩიაშვილი`
         }
       : {
           title: 'PACU ტკივილის მართვა',
-          documentTitle: `PACU ტკივილის მართვა v${APP_VERSION} | Dr. Vasil Khachiashvili`,
-          logoLabel: `DrX · PACU ტკივილის მართვა v${APP_VERSION} · Dr. Vasil Khachiashvili`
+          documentTitle: `PACU ტკივილის მართვა v${APP_VERSION} | დოქტორი ვასილ ხაჩიაშვილი`,
+          logoLabel: `DrX · PACU ტკივილის მართვა v${APP_VERSION} · დოქტორი ვასილ ხაჩიაშვილი`
         };
   }
   return ward
@@ -26497,18 +27655,217 @@ function setRenalFunctionBand(band, options = {}) {
   return normalized;
 }
 
+function commitOpioidContext(nextContext, options = {}) {
+  state.opioidContext = normalizeOpioidContext({ ...state.opioidContext, ...(nextContext || {}) });
+  syncLegacyOpioidToleranceFlag(state);
+  if (options.save !== false) saveState();
+  if (options.render !== false) {
+    renderOverridePanel();
+    renderProspectBaselineCard();
+    renderRecommendation();
+    renderWorkflowStepStatus();
+  }
+  return state.opioidContext;
+}
+
+function renderOpioidContextEditor(host) {
+  if (!host) return;
+  state.opioidContext = normalizeOpioidContext(state.opioidContext, false);
+  const ctx = state.opioidContext;
+  const editor = document.createElement('div');
+  editor.className = 'opioid-context-editor opioid-context-editor-polished';
+
+  // v2.73.2 Phase 2: the user-facing control is an accessible single-choice
+  // card group. The native select is retained, visually hidden, so existing
+  // QA/automation hooks and legacy integration points remain stable.
+  const statusField = document.createElement('fieldset');
+  statusField.className = 'opioid-context-field opioid-context-status-field';
+  const statusLabel = document.createElement('legend');
+  statusLabel.className = 'opioid-context-field-label';
+  statusLabel.textContent = t('opioid_context_status');
+  const statusHint = document.createElement('div');
+  statusHint.className = 'opioid-context-selection-hint';
+  statusHint.textContent = t('opioid_context_selection_hint');
+
+  const statusSelect = document.createElement('select');
+  statusSelect.id = 'opioid-context-type';
+  statusSelect.className = 'opioid-context-select opioid-context-native-select visually-hidden';
+  statusSelect.tabIndex = -1;
+  statusSelect.setAttribute('aria-hidden', 'true');
+  const contextTypes = ['none','chronic_prescribed','methadone','buprenorphine','active_use','unknown'];
+  contextTypes.forEach(type => {
+    const opt = document.createElement('option');
+    opt.value = type;
+    opt.textContent = t('opioid_context_' + type);
+    if (ctx.type === type) opt.selected = true;
+    statusSelect.appendChild(opt);
+  });
+  statusSelect.addEventListener('change', () => {
+    const type = OPIOID_CONTEXT_TYPES.has(statusSelect.value) ? statusSelect.value : 'none';
+    const clearMaintenance = !OPIOID_MAINTENANCE_CONTEXT_TYPES.has(type);
+    commitOpioidContext({
+      type,
+      maintenanceDoseMgPerDay: clearMaintenance ? null : state.opioidContext.maintenanceDoseMgPerDay,
+      todayDoseStatus: clearMaintenance ? null : state.opioidContext.todayDoseStatus
+    });
+  });
+
+  const choiceGrid = document.createElement('div');
+  choiceGrid.className = 'opioid-context-choice-grid';
+  choiceGrid.setAttribute('role', 'radiogroup');
+  choiceGrid.setAttribute('aria-label', t('opioid_context_status'));
+  contextTypes.forEach(type => {
+    const choice = document.createElement('label');
+    choice.className = 'opioid-context-choice' + (ctx.type === type ? ' is-selected' : '');
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = 'opioid-context-type-choice';
+    radio.value = type;
+    radio.checked = ctx.type === type;
+    radio.className = 'opioid-context-choice-input';
+    const indicator = document.createElement('span');
+    indicator.className = 'opioid-context-choice-indicator';
+    indicator.setAttribute('aria-hidden', 'true');
+    const copy = document.createElement('span');
+    copy.className = 'opioid-context-choice-copy';
+    const title = document.createElement('span');
+    title.className = 'opioid-context-choice-title';
+    title.textContent = t('opioid_context_' + type);
+    copy.appendChild(title);
+    choice.append(radio, indicator, copy);
+    radio.addEventListener('change', () => {
+      if (!radio.checked) return;
+      const clearMaintenance = !OPIOID_MAINTENANCE_CONTEXT_TYPES.has(type);
+      commitOpioidContext({
+        type,
+        maintenanceDoseMgPerDay: clearMaintenance ? null : state.opioidContext.maintenanceDoseMgPerDay,
+        todayDoseStatus: clearMaintenance ? null : state.opioidContext.todayDoseStatus
+      });
+    });
+    choiceGrid.appendChild(choice);
+  });
+  statusField.append(statusLabel, statusHint, statusSelect, choiceGrid);
+  editor.appendChild(statusField);
+
+  if (OPIOID_MAINTENANCE_CONTEXT_TYPES.has(ctx.type)) {
+    const maintenanceCard = document.createElement('div');
+    maintenanceCard.className = 'opioid-context-maintenance-card';
+    const maintenanceHeader = document.createElement('div');
+    maintenanceHeader.className = 'opioid-context-maintenance-header';
+    const maintenanceTitle = document.createElement('div');
+    maintenanceTitle.className = 'opioid-context-maintenance-title';
+    maintenanceTitle.textContent = t('opioid_context_maintenance_details');
+    const maintenanceBadge = document.createElement('div');
+    maintenanceBadge.className = 'opioid-context-maintenance-badge';
+    maintenanceBadge.textContent = t('opioid_context_' + ctx.type);
+    maintenanceHeader.append(maintenanceTitle, maintenanceBadge);
+
+    const maintenance = document.createElement('div');
+    maintenance.className = 'opioid-context-maintenance-grid';
+
+    const doseField = document.createElement('label');
+    doseField.className = 'opioid-context-field opioid-context-maintenance-field';
+    const doseLabel = document.createElement('span');
+    doseLabel.className = 'opioid-context-field-label';
+    doseLabel.textContent = t(ctx.type === 'methadone' ? 'opioid_context_methadone_dose' : 'opioid_context_buprenorphine_dose');
+    const doseWrap = document.createElement('div');
+    doseWrap.className = 'opioid-context-dose-wrap opioid-context-dose-control';
+    const doseInput = document.createElement('input');
+    doseInput.id = 'opioid-context-maintenance-dose';
+    doseInput.className = 'opioid-context-dose-input';
+    doseInput.type = 'number';
+    doseInput.min = '0';
+    doseInput.step = '0.1';
+    doseInput.inputMode = 'decimal';
+    doseInput.value = ctx.maintenanceDoseMgPerDay == null ? '' : String(ctx.maintenanceDoseMgPerDay);
+    doseInput.addEventListener('change', () => {
+      const n = Number(doseInput.value);
+      commitOpioidContext({ maintenanceDoseMgPerDay: Number.isFinite(n) && n > 0 ? n : null });
+    });
+    const unit = document.createElement('span');
+    unit.className = 'opioid-context-unit';
+    unit.textContent = t('opioid_context_dose_unit');
+    doseWrap.append(doseInput, unit);
+    doseField.append(doseLabel, doseWrap);
+
+    const todayField = document.createElement('fieldset');
+    todayField.className = 'opioid-context-field opioid-context-maintenance-field opioid-context-today-field';
+    const todayLabel = document.createElement('legend');
+    todayLabel.className = 'opioid-context-field-label';
+    todayLabel.textContent = t('opioid_context_today_dose');
+
+    const todaySelect = document.createElement('select');
+    todaySelect.id = 'opioid-context-today-dose';
+    todaySelect.className = 'opioid-context-select opioid-context-native-select visually-hidden';
+    todaySelect.tabIndex = -1;
+    todaySelect.setAttribute('aria-hidden', 'true');
+    const statusOptions = [
+      ['', 'opioid_context_today_prompt'],
+      ['taken', 'opioid_context_today_taken'],
+      ['not_taken', 'opioid_context_today_not_taken'],
+      ['unknown', 'opioid_context_today_unknown']
+    ];
+    statusOptions.forEach(([value,key]) => {
+      const opt = document.createElement('option');
+      opt.value = value;
+      opt.textContent = t(key);
+      if ((ctx.todayDoseStatus || '') === value) opt.selected = true;
+      todaySelect.appendChild(opt);
+    });
+    todaySelect.addEventListener('change', () => {
+      commitOpioidContext({ todayDoseStatus: ['taken','not_taken','unknown'].includes(todaySelect.value) ? todaySelect.value : null });
+    });
+
+    const todayChoices = document.createElement('div');
+    todayChoices.className = 'opioid-context-today-choices';
+    todayChoices.setAttribute('role', 'radiogroup');
+    todayChoices.setAttribute('aria-label', t('opioid_context_today_dose'));
+    [['taken','opioid_context_today_taken'],['not_taken','opioid_context_today_not_taken'],['unknown','opioid_context_today_unknown']].forEach(([value,key]) => {
+      const lab = document.createElement('label');
+      lab.className = 'opioid-context-today-choice' + (ctx.todayDoseStatus === value ? ' is-selected' : '');
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = 'opioid-context-today-dose-choice';
+      radio.value = value;
+      radio.checked = ctx.todayDoseStatus === value;
+      radio.className = 'opioid-context-choice-input';
+      const text = document.createElement('span');
+      text.textContent = t(key);
+      lab.append(radio, text);
+      radio.addEventListener('change', () => {
+        if (radio.checked) commitOpioidContext({ todayDoseStatus:value });
+      });
+      todayChoices.appendChild(lab);
+    });
+    todayField.append(todayLabel, todaySelect, todayChoices);
+
+    maintenance.append(doseField, todayField);
+    maintenanceCard.append(maintenanceHeader, maintenance);
+    editor.appendChild(maintenanceCard);
+  }
+
+  const note = document.createElement('div');
+  note.className = 'opioid-context-note opioid-context-note-polished';
+  const noteIcon = document.createElement('span');
+  noteIcon.className = 'opioid-context-note-icon';
+  noteIcon.textContent = 'i';
+  noteIcon.setAttribute('aria-hidden', 'true');
+  const noteText = document.createElement('span');
+  noteText.textContent = t('opioid_context_note');
+  note.append(noteIcon, noteText);
+  editor.appendChild(note);
+  host.appendChild(editor);
+}
+
 function renderOverridePanel() {
-  // Now renders into the always-visible patient-factors card in the left column.
-  // The right-column ⓘ button just scrolls/highlights this card.
+  // v2.73.1 Phase 1: presentation-only information architecture.
+  // Clinical factors, state writes, persistence and recommendation semantics are unchanged.
   const panel = document.getElementById('override-grid-inline');
   if (!panel) return;
 
   panel.innerHTML = '';
   renderPatientDemographicsStrip();
 
-  // Phase 3: keep the disclosure DOM synchronized with persisted/reset UI state.
-  // This prevents a previously expanded factor editor from visually leaking into
-  // a newly reset/default state after renderAll()/renderOverridePanel().
   const factorsBody = document.getElementById('patient-factors-body');
   const factorsShouldCollapse = state.ui.factorsCollapsed !== false;
   if (factorsBody) {
@@ -26516,118 +27873,203 @@ function renderOverridePanel() {
     factorsBody.style.maxHeight = factorsShouldCollapse ? '0px' : '';
     setDisclosureRegionAccessibility(factorsBody, !factorsShouldCollapse);
   }
-  
+
+  // Decision-driving cards are visually primary. Documentation-only history is
+  // separated below, but its persistence/handover behavior remains unchanged.
   const cats = [
+    {
+      key: 'cat_opioid_context',
+      custom: 'opioid_context',
+      group: 'clinical',
+      column: 'left',
+      hintKey: 'cat_opioid_context_hint'
+    },
     {
       key: 'cat_chronic_conditions',
       source: 'chronicConditions',
-      factors: ['ckd','pvd','af','ihd','stent','cabg','chf']
+      factors: ['ckd','pvd','af','ihd','stent','cabg','chf'],
+      group: 'clinical',
+      column: 'left'
+    },
+    {
+      key: 'cat_organ_risks',
+      factors: ['nsaid_contraindicated', 'liver', 'bleeding', 'gi_bleed', 'ileus', 'aspirin_antiplatelet', 'hemodynamic'],
+      group: 'clinical',
+      column: 'left'
+    },
+    {
+      key: 'cat_allergies',
+      factors: ['nsaid_allergy', 'nsaid_asthma', 'metamizole_allergy', 'nefopam_allergy', 'opioid_allergy'],
+      group: 'clinical',
+      column: 'right'
+    },
+    {
+      key: 'cat_respiratory_neuro',
+      factors: ['osa', 'delirium', 'seizure', 'glaucoma', 'urinary', 'surgical_complication'],
+      group: 'clinical',
+      column: 'right'
+    },
+    {
+      key: 'cat_demographics',
+      factors: ['pregnancy'],
+      group: 'clinical',
+      column: 'right'
     },
     {
       key: 'cat_documentation_only',
       source: 'chronicConditions',
       documentationOnly: true,
-      factors: ['htn','dm','copd','asthma','cva','smoker','met_lt4','gerd','other']
-    },
-    {
-      key: 'cat_allergies',
-      factors: ['nsaid_allergy', 'nsaid_asthma', 'metamizole_allergy', 'nefopam_allergy', 'opioid_allergy']
-    },
-    {
-      key: 'cat_organ_risks',
-      factors: ['nsaid_contraindicated', 'liver', 'bleeding', 'gi_bleed', 'ileus', 'aspirin_antiplatelet', 'hemodynamic']
-    },
-    {
-      key: 'cat_demographics',
-      factors: ['pregnancy']
-    },
-    {
-      key: 'cat_respiratory_neuro',
-      factors: ['osa', 'opioid_tolerant', 'delirium', 'seizure', 'glaucoma', 'urinary', 'surgical_complication']
+      factors: ['htn','dm','copd','asthma','cva','smoker','met_lt4','gerd','other'],
+      group: 'additional',
+      column: 'left',
+      hintKey: 'cat_documentation_hint'
     }
   ];
 
-  const container = document.createElement('div');
-  container.className = 'override-categories';
-
-  // Derived demographic flags remain part of the clinical factor count even
-  // though their old manual checkboxes are gone.
   const effectiveRenalSelected = isEffectiveRenalDysfunction(state.patient, state.chronicConditions);
-  let activeCount = (state.patient.age65 ? 1 : 0) + (state.patient.weight_low ? 1 : 0) + (effectiveRenalSelected ? 1 : 0);
+  const legacyToleranceOnly = !!state.patient.opioid_tolerant && !opioidContextIsActive();
+  let activeCount = (state.patient.age65 ? 1 : 0) + (state.patient.weight_low ? 1 : 0) + (effectiveRenalSelected ? 1 : 0) + (legacyToleranceOnly ? 1 : 0);
   let hasDanger = !!(effectiveRenalSelected && state.patient.crcl_low);
   const DANGER_FACTORS = ['surgical_complication', 'hemodynamic', 'crcl_low'];
+  const WARNING_FACTORS = ['crcl_mid', 'bleeding', 'gi_bleed', 'osa', 'liver', 'nsaid_allergy', 'nsaid_asthma', 'nsaid_contraindicated', 'opioid_allergy', 'metamizole_allergy', 'nefopam_allergy', 'ileus'];
+
+  const clinicalGroup = document.createElement('section');
+  clinicalGroup.className = 'factor-category-group factor-category-group-clinical';
+  const clinicalHeading = document.createElement('div');
+  clinicalHeading.className = 'factor-category-group-heading';
+  clinicalHeading.innerHTML = `<span class="factor-category-group-title">${escapeHtml(t('factor_group_clinical'))}</span><span class="factor-category-group-hint">${escapeHtml(t('factor_group_clinical_hint'))}</span>`;
+  clinicalGroup.appendChild(clinicalHeading);
+  const clinicalFeatured = document.createElement('div');
+  clinicalFeatured.className = 'override-category-featured';
+  clinicalGroup.appendChild(clinicalFeatured);
+  const clinicalGrid = document.createElement('div');
+  clinicalGrid.className = 'override-categories';
+  const clinicalLeft = document.createElement('div');
+  clinicalLeft.className = 'override-category-column override-category-column-left';
+  const clinicalRight = document.createElement('div');
+  clinicalRight.className = 'override-category-column override-category-column-right';
+  clinicalGrid.append(clinicalLeft, clinicalRight);
+  clinicalGroup.appendChild(clinicalGrid);
+
+  const additionalGroup = document.createElement('section');
+  additionalGroup.className = 'factor-category-group factor-category-group-additional';
+  const additionalHeading = document.createElement('div');
+  additionalHeading.className = 'factor-category-group-heading';
+  additionalHeading.innerHTML = `<span class="factor-category-group-title">${escapeHtml(t('factor_group_additional'))}</span>`;
+  additionalGroup.appendChild(additionalHeading);
+  const additionalGrid = document.createElement('div');
+  additionalGrid.className = 'override-categories override-categories-additional';
+  const additionalLeft = document.createElement('div');
+  additionalLeft.className = 'override-category-column override-category-column-left';
+  const additionalRight = document.createElement('div');
+  additionalRight.className = 'override-category-column override-category-column-right';
+  additionalGrid.append(additionalLeft, additionalRight);
+  additionalGroup.appendChild(additionalGrid);
+
+  const formatOpioidHeaderSummary = () => {
+    const ctx = normalizeOpioidContext(state.opioidContext, false);
+    if (!opioidContextIsActive(ctx)) return t('cat_opioid_context_hint');
+    const parts = [opioidContextDisplayLabel(ctx.type)];
+    if (OPIOID_MAINTENANCE_CONTEXT_TYPES.has(ctx.type) && ctx.maintenanceDoseMgPerDay != null) {
+      parts.push(`${ctx.maintenanceDoseMgPerDay} ${t('opioid_context_dose_unit')}`);
+    }
+    if (OPIOID_MAINTENANCE_CONTEXT_TYPES.has(ctx.type) && ctx.todayDoseStatus) {
+      const key = ctx.todayDoseStatus === 'taken' ? 'opioid_context_today_taken'
+        : ctx.todayDoseStatus === 'not_taken' ? 'opioid_context_today_not_taken'
+        : 'opioid_context_today_unknown';
+      parts.push(t(key));
+    }
+    return parts.join(' · ');
+  };
 
   for (const cat of cats) {
     const card = document.createElement('div');
     card.className = 'override-cat-card';
+    card.dataset.categoryKey = cat.key;
     if (cat.documentationOnly) card.classList.add('documentation-only');
+    if (cat.custom === 'opioid_context') {
+      card.classList.add('opioid-context-card');
+      if (opioidContextIsActive()) card.classList.add('has-selection');
+    }
 
     const isCollapsed = state.ui.catCollapsed[cat.key] !== false;
+    if (!isCollapsed) card.classList.add('is-expanded');
+    const factorState = cat.source === 'chronicConditions' ? state.chronicConditions : state.patient;
+    let activeInCat = 0;
+    let hasDangerInCat = false;
+    let activeLabels = [];
 
-    // Create header button
+    if (cat.custom === 'opioid_context') {
+      activeInCat = opioidContextIsActive() ? 1 : 0;
+      if (activeInCat) {
+        activeCount++;
+        activeLabels = [formatOpioidHeaderSummary()];
+      }
+    } else {
+      activeLabels = cat.factors.filter(f => !!factorState[f]).map(f => t('factor_' + f));
+      activeInCat = activeLabels.length;
+      hasDangerInCat = cat.factors.some(f => !!factorState[f] && DANGER_FACTORS.includes(f));
+    }
+    if (activeInCat > 0) card.classList.add('has-active-items');
+
     const headerBtn = document.createElement('button');
     headerBtn.type = 'button';
     headerBtn.className = 'override-cat-header-btn';
     headerBtn.setAttribute('aria-expanded', !isCollapsed);
 
+    const headerCopy = document.createElement('span');
+    headerCopy.className = 'override-cat-header-copy';
     const titleText = document.createElement('span');
+    titleText.className = 'override-cat-title';
     titleText.textContent = t(cat.key);
-    headerBtn.appendChild(titleText);
+    headerCopy.appendChild(titleText);
 
-    // Calculate active factors in this subcategory
-    let activeInCat = 0;
-    let hasDangerInCat = false;
-    const factorState = cat.source === 'chronicConditions' ? state.chronicConditions : state.patient;
-    for (const f of cat.factors) {
-      if (factorState[f]) {
-        activeInCat++;
-        if (DANGER_FACTORS.includes(f)) hasDangerInCat = true;
-      }
+    const subtitle = document.createElement('span');
+    subtitle.className = 'override-cat-subtitle';
+    if (cat.custom === 'opioid_context') {
+      subtitle.textContent = formatOpioidHeaderSummary();
+    } else if (activeLabels.length) {
+      const shown = activeLabels.slice(0, 2);
+      subtitle.textContent = shown.join(' · ') + (activeLabels.length > 2 ? ` · +${activeLabels.length - 2}` : '');
+    } else if (cat.hintKey) {
+      subtitle.textContent = t(cat.hintKey);
+    } else {
+      subtitle.textContent = currentLang === 'ka' ? 'არჩევანი არ არის' : 'No selection';
     }
+    headerCopy.appendChild(subtitle);
+    headerBtn.appendChild(headerCopy);
 
-    const rightSide = document.createElement('div');
-    if (rightSide.style) {
-      rightSide.style.display = 'flex';
-      rightSide.style.alignItems = 'center';
-      rightSide.style.gap = '8px';
-    }
-
-    if (activeInCat > 0) {
+    const rightSide = document.createElement('span');
+    rightSide.className = 'override-cat-header-side';
+    if (activeInCat > 0 && cat.custom !== 'opioid_context') {
       const badge = document.createElement('span');
       badge.className = 'patient-factors-count';
-      if (badge.style) {
-        badge.style.position = 'static';
-        badge.style.display = 'inline-flex';
-      }
+      badge.style.position = 'static';
+      badge.style.display = 'inline-flex';
       badge.textContent = activeInCat;
-      if (hasDangerInCat) {
-        badge.classList.add('has-danger');
-      }
+      if (hasDangerInCat) badge.classList.add('has-danger');
       rightSide.appendChild(badge);
     }
-
     const chevron = document.createElement('span');
     chevron.className = 'chevron-arrow';
     chevron.textContent = isCollapsed ? '▼' : '▲';
     rightSide.appendChild(chevron);
-
     headerBtn.appendChild(rightSide);
     card.appendChild(headerBtn);
 
-    // Create body
     const itemsBody = document.createElement('div');
     itemsBody.className = 'override-grid-items-body' + (isCollapsed ? '' : ' expanded');
-
     const items = document.createElement('div');
     items.className = 'override-grid-items';
 
-    for (const f of cat.factors) {
+    if (cat.custom === 'opioid_context') {
+      renderOpioidContextEditor(items);
+    } else for (const f of cat.factors) {
       const id = 'factor-' + f;
       const lab = document.createElement('label');
       lab.htmlFor = id;
-      
-      let isChecked = !!factorState[f];
-      const WARNING_FACTORS = ['crcl_mid', 'bleeding', 'gi_bleed', 'osa', 'liver', 'nsaid_allergy', 'nsaid_asthma', 'nsaid_contraindicated', 'opioid_allergy', 'metamizole_allergy', 'nefopam_allergy', 'ileus'];
+
+      const isChecked = !!factorState[f];
       if (isChecked) {
         activeCount++;
         lab.classList.add('checked');
@@ -26646,10 +28088,6 @@ function renderOverridePanel() {
       cb.addEventListener('change', () => {
         factorState[f] = cb.checked;
         if (cat.source === 'chronicConditions' && f === 'ckd') {
-          // v2.60.4 Phase 4: CKD activates the renal gate without becoming the
-          // manual renal checkbox. On entry, preserve an existing explicit band;
-          // otherwise require one. On removal, clear the band only when no manual
-          // renal source remains. Any source change invalidates prior NSAID review.
           if (cb.checked) {
             if (!['ge60','mid','low','unknown'].includes(state.patient.renalBand)) state.patient.renalBand = 'unknown';
             if (state.patient.renalBand === 'low') { state.patient.crcl_low = true; state.patient.crcl_mid = false; }
@@ -26671,24 +28109,28 @@ function renderOverridePanel() {
 
       const span = document.createElement('span');
       span.textContent = t('factor_' + f);
-      
-      lab.appendChild(cb);
-      lab.appendChild(span);
+      lab.append(cb, span);
       items.appendChild(lab);
     }
 
     itemsBody.appendChild(items);
     card.appendChild(itemsBody);
-    container.appendChild(card);
-
-    // Toggle collapse state on header click
     headerBtn.addEventListener('click', () => {
       state.ui.catCollapsed[cat.key] = !isCollapsed;
       renderOverridePanel();
     });
-  }
-  panel.appendChild(container);
 
+    if (cat.custom === 'opioid_context') {
+      clinicalFeatured.appendChild(card);
+    } else if (cat.group === 'additional') {
+      (cat.column === 'right' ? additionalRight : additionalLeft).appendChild(card);
+    } else {
+      (cat.column === 'right' ? clinicalRight : clinicalLeft).appendChild(card);
+    }
+  }
+
+  panel.appendChild(clinicalGroup);
+  panel.appendChild(additionalGroup);
   updatePatientFactorsSummary(activeCount, hasDanger, DANGER_FACTORS);
 }
 
@@ -26707,14 +28149,17 @@ function updatePatientFactorsSummary(activeCount, hasDanger, dangerFactors) {
     .filter(k => !!state.chronicConditions[k])
     .map(key => ({ key, source:'chronic', severity:'neutral' }));
   const patientSelected = Object.keys(state.patient)
-    .filter(k => !['weightKg','ageYears','age65Legacy','weightLowLegacy','age65','weight_low','renal_dysfunction','renalBand','crcl_mid','crcl_low'].includes(k) && state.patient[k] === true)
+    .filter(k => k !== 'opioid_tolerant' && !['weightKg','ageYears','age65Legacy','weightLowLegacy','age65','weight_low','renal_dysfunction','renalBand','crcl_mid','crcl_low'].includes(k) && state.patient[k] === true)
     .map(key => ({
       key,
       source:'patient',
       severity: dangerFactors.includes(key) ? 'danger' : (WARNING_FACTORS.includes(key) ? 'warning' : 'neutral')
     }));
+  const opioidContextSelected = opioidContextIsActive()
+    ? [{ key:'opioid_context', source:'opioidContext', severity:'warning', label:opioidContextDisplayLabel() }]
+    : (state.patient.opioid_tolerant ? [{ key:'opioid_tolerant', source:'legacy', severity:'warning', label:t('factor_opioid_tolerant') }] : []);
   const severityRank = { danger:0, warning:1, neutral:2 };
-  const selected = [...patientSelected, ...chronicSelected].sort((a,b) => severityRank[a.severity] - severityRank[b.severity]);
+  const selected = [...patientSelected, ...opioidContextSelected, ...chronicSelected].sort((a,b) => severityRank[a.severity] - severityRank[b.severity]);
   const dangerCount = patientSelected.filter(item => item.severity === 'danger').length;
 
   if (badge) {
@@ -26748,7 +28193,7 @@ function updatePatientFactorsSummary(activeCount, hasDanger, dangerFactors) {
       pill.className = 'patient-factor-pill patient-factor-summary-pill';
       if (item.severity === 'danger') pill.classList.add('danger');
       else if (item.severity === 'warning') pill.classList.add('warning');
-      pill.textContent = t('factor_' + item.key);
+      pill.textContent = item.label || t('factor_' + item.key);
       summaryChips.appendChild(pill);
     });
     if (selected.length > 3) {
@@ -27763,6 +29208,75 @@ function buildMorphineInitialRescueFollowupCard(followup) {
   card.append(name,main,meta); return card;
 }
 
+function buildPatientSpecificAdjunctCard(result) {
+  const adjuncts = Array.isArray(result?.patientSpecificAdjuncts) ? result.patientSpecificAdjuncts : [];
+  if (!adjuncts.length) return null;
+  const card = document.createElement('div');
+  card.className = 'opioid-adjunct-compact';
+  adjuncts.forEach((adj, index) => {
+    const row = document.createElement('div');
+    row.className = 'opioid-adjunct-compact-row';
+    row.innerHTML = `
+      <div class="opioid-adjunct-compact-label">${escapeHtml(t('opioid_patient_adjunct_label'))}</div>
+      <div class="opioid-adjunct-compact-main">${escapeHtml(adj.display || `${adj.name} ${adj.dose || ''}`)}</div>
+      ${adj.note ? `<div class="opioid-adjunct-compact-meta">${escapeHtml(adj.note)}</div>` : ''}`;
+    card.appendChild(row);
+  });
+  return card;
+}
+
+function buildOpioidSpecialContextCard(result) {
+  const decision = result?.opioidContextDecision;
+  const maintenance = result?.maintenanceTherapy;
+  const oih = result?.opioidHyperalgesiaAdvisory;
+  if (!decision && !maintenance && !oih) return null;
+
+  const card = document.createElement('details');
+  card.className = 'opioid-special-card opioid-special-disclosure' + (decision?.type === 'unknown' ? ' is-unknown' : '');
+  if (oih) card.open = true;
+
+  const summary = document.createElement('summary');
+  summary.className = 'opioid-special-summary';
+  const summaryText = decision
+    ? [decision.title, decision.label].filter(Boolean).join(' · ')
+    : (currentLang === 'ka' ? 'ოპიოიდური კონტექსტი და ჩანაცვლებითი თერაპია' : 'Opioid context and maintenance therapy');
+  summary.innerHTML = `
+    <span class="opioid-special-summary-main">
+      <span class="opioid-special-summary-icon">ⓘ</span>
+      <span class="opioid-special-summary-text">${escapeHtml(summaryText)}</span>
+    </span>
+    <span class="opioid-special-summary-chevron" aria-hidden="true">⌄</span>`;
+  card.appendChild(summary);
+
+  const body = document.createElement('div');
+  body.className = 'opioid-special-body';
+  if (decision?.message) {
+    const message = document.createElement('div');
+    message.className = 'opioid-special-message';
+    message.textContent = decision.message;
+    body.appendChild(message);
+  }
+  if (maintenance) {
+    const section = document.createElement('div');
+    section.className = 'opioid-special-section maintenance';
+    section.innerHTML = `
+      <div class="opioid-special-section-label">${escapeHtml(maintenance.label)}</div>
+      <div class="opioid-special-section-main">${escapeHtml(maintenance.main)}</div>
+      <div class="opioid-special-section-meta">${escapeHtml(maintenance.doseText)} · ${escapeHtml(maintenance.statusText)}</div>`;
+    body.appendChild(section);
+  }
+  if (oih) {
+    const section = document.createElement('div');
+    section.className = 'opioid-special-section oih';
+    section.innerHTML = `
+      <div class="opioid-special-section-label">${escapeHtml(oih.label || t('opioid_oih_label'))}</div>
+      <div class="opioid-special-section-main">${escapeHtml(oih.message || '')}</div>`;
+    body.appendChild(section);
+  }
+  card.appendChild(body);
+  return card;
+}
+
 function renderRecommendation() {
   // Update assumed line
   const pain = getEffectivePainAssessment();
@@ -27778,6 +29292,7 @@ function renderRecommendation() {
     lastOpioidBucketSetAt: state.lastOpioidBucketSetAt,
     safety: state.safety,
     patient: state.patient,
+    opioidContext: state.opioidContext,
     chronicConditions: state.chronicConditions,
     careSetting: state.careSetting
   });
@@ -27882,6 +29397,9 @@ function renderRecommendation() {
   const exposureStrip = buildDoseExposureStrip();
   if (exposureStrip) content.appendChild(exposureStrip);
 
+  const opioidSpecialCard = buildOpioidSpecialContextCard(result);
+  const patientSpecificAdjunctCard = buildPatientSpecificAdjunctCard(result);
+
 
   // v2.41 Phase 2: an explicit single-shot block creates a qualitative bridge
   // to procedure-specific systemic baseline analgesia. This is advisory only
@@ -27961,6 +29479,7 @@ function renderRecommendation() {
     firstDiv.className = 'rec-first'
       + (first.combination ? ' combo-first' : '')
       + (result.escalation?.active ? ' escalation-context' : '')
+      + (first.opioidToleranceAware ? ' opioid-tolerance-primary' : '')
       + (first.conditional ? ' conditional-recommendation' : '')
       + (primarySafetyState.preliminary ? ' preliminary-recommendation' : '')
       + (weightOnlyPreliminary ? ' weight-only-preliminary' : '')
@@ -27976,7 +29495,7 @@ function renderRecommendation() {
       ? ''
       : (first.combination && Array.isArray(first.parts)
           ? `<div class="combo-dose-list">${first.parts.map((p, index) => renderComboDosePartHtml(p, index)).join('')}</div>`
-          : renderPrimaryDoseHtml(first.name, first.dose, inlineDoseTooltipHtml));
+          : renderPrimaryDoseHtml(first.name, first.dose, inlineDoseTooltipHtml, { suppressMorphineStandardNote:!!first.opioidToleranceAware }));
     const primaryNameHtml = primarySafetyState.preliminary
       ? `<div class="med-name-wrapper"><span class="med-name">${escapeHtml(first.name || (currentLang==='ka'?'რეკომენდაცია':'Recommendation'))}</span></div>`
       : (first.combination
@@ -28006,7 +29525,7 @@ function renderRecommendation() {
           ? `<div class="rec-preliminary-note">${escapeHtml(preliminaryCopy.note)}</div>`
           : `<div class="rec-first-footer">
           <div class="med-reassess">⏱ ${escapeHtml(reassessShortText)}</div>
-          <div class="med-interval">${escapeHtml(t('rec_interval'))} ${escapeHtml(first.interval)}</div>
+          ${first.opioidToleranceAware ? '' : `<div class="med-interval">${escapeHtml(t('rec_interval'))} ${escapeHtml(first.interval)}</div>`}
         </div>`);
 
     firstDiv.innerHTML = `
@@ -28019,6 +29538,7 @@ function renderRecommendation() {
         ${primaryNameHtml}
         ${primarySafetyState.preliminary ? '' : `<div class="rec-dose-block">${doseHtml}</div>`}
       </div>
+      ${(!primarySafetyState.preliminary && first.opioidToleranceAware && result.opioidContextDecision) ? `<div class="rec-opioid-context-inline"><span class="rec-opioid-context-dot" aria-hidden="true"></span><span>${escapeHtml([result.opioidContextDecision.title, result.opioidContextDecision.label].filter(Boolean).join(' · '))}</span></div>` : ''}
       ${(!primarySafetyState.preliminary && first.conditional) ? `<div class="rec-conditional-note"><strong>${escapeHtml(currentLang==='ka'?'გადაამოწმე მიცემამდე:':'Verify before administration:')}</strong> ${escapeHtml(first.conditional.message)}</div>` : ''}
       ${footerHtml}
     `;
@@ -28054,6 +29574,11 @@ function renderRecommendation() {
 
     content.appendChild(firstDiv);
 
+    // v2.75: the bedside action comes first. Patient-specific adjuncts and
+    // explanatory opioid context follow as secondary/on-demand material.
+    if (patientSpecificAdjunctCard) content.appendChild(patientSpecificAdjunctCard);
+    if (opioidSpecialCard) content.appendChild(opioidSpecialCard);
+
     // A gate that belongs to a possible rescue/secondary pathway must not
     // disappear, but it also must not precede or visually dominate the primary
     // answer. Keep it as a compact checkpoint immediately below the answer.
@@ -28068,8 +29593,8 @@ function renderRecommendation() {
     // Combination cards expose one factual recorder per component.
     if (!first.conditional && !primarySafetyState.preliminary) {
       if (first.combination && Array.isArray(first.parts)) {
-        first.parts.forEach(part => appendGivenAction(firstDiv, part.name, part.dose));
-      } else {
+        first.parts.forEach(part => { if (part.directRecordAllowed !== false) appendGivenAction(firstDiv, part.name, part.dose); });
+      } else if (first.directRecordAllowed !== false) {
         appendGivenAction(firstDiv, first.name, first.dose);
       }
     }
@@ -28150,14 +29675,14 @@ function renderRecommendation() {
               <span class="rec-compact-chevron" aria-hidden="true">⌄</span>
             </summary>
             <div class="rec-compact-details">
-              ${isMorphineDisplayName(r.name) ? getMorphineInfusionNoteHtml(true) : ''}
+              ${isMorphineDisplayName(r.name) && !r.opioidToleranceAware ? getMorphineInfusionNoteHtml(true) : ''}
               ${hasMetamizoleInName(r.name) ? `<span class="med-dose-note-sm">${escapeHtml(getMetamizoleDoseNote())}</span>` : ''}
               <div class="med-why-sm">${escapeHtml(r.why)}</div>
               ${r.conditional ? `<div class="rec-conditional-note"><strong>${escapeHtml(currentLang==='ka'?'გადაამოწმე მიცემამდე:':'Verify before administration:')}</strong> ${escapeHtml(r.conditional.message)}</div>` : ''}
               ${buildCompactStructuredTooltipHtml(r.name, r.tooltip)}
             </div>
           `;
-          if (!r.conditional) appendGivenAction(thumb.querySelector('.rec-compact-details'), r.name, r.dose);
+          if (!r.conditional && r.directRecordAllowed !== false) appendGivenAction(thumb.querySelector('.rec-compact-details'), r.name, r.dose);
           others.appendChild(thumb);
         });
         content.appendChild(others);
@@ -28169,6 +29694,11 @@ function renderRecommendation() {
   } else if (opioidGateRequired || nsaidGateRequired) {
     const checkpoint = buildGateOnlyRecommendationCheckpoint({ opioidGateRequired, nsaidGateRequired, result });
     if (checkpoint) content.appendChild(checkpoint);
+    if (patientSpecificAdjunctCard) content.appendChild(patientSpecificAdjunctCard);
+    if (opioidSpecialCard) content.appendChild(opioidSpecialCard);
+  } else {
+    if (patientSpecificAdjunctCard) content.appendChild(patientSpecificAdjunctCard);
+    if (opioidSpecialCard) content.appendChild(opioidSpecialCard);
   }
 
 
@@ -28622,7 +30152,7 @@ function recommendationItemContainsOpioid(item) {
 function getPrimaryRecommendationSafetyState(first, result, nsaidGateRequired, opioidGateRequired) {
   const nsaidPending = !!(nsaidGateRequired && recommendationItemContainsMedication(first, 'Ketorolac'));
   const opioidPending = !!(opioidGateRequired && recommendationItemContainsOpioid(first));
-  const initialMorphineWithoutWeight = !!(first && !first.combination && String(first.name || '') === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(state.patient));
+  const initialMorphineWithoutWeight = !!(first && !first.combination && !first.opioidToleranceAware && String(first.name || '') === 'Morphine' && isUnknownWeightInitialMorphineRescueAvailable(state.patient));
   const weightPending = recommendationRequiresExactWeight(first, state.patient, { allowUnknownWeightInitialMorphine: initialMorphineWithoutWeight });
   return {
     preliminary: nsaidPending || opioidPending || weightPending,
@@ -29770,15 +31300,40 @@ function hvGivenAnalgesiaText() {
   return 'მიღებული: ' + shown.join(' · ');
 }
 
+function hvOpioidContextRiskText() {
+  const ctx = normalizeOpioidContext(state.opioidContext, !!state.patient?.opioid_tolerant);
+  const labels = {
+    chronic_prescribed: 'ქრონიკული დანიშნული ოპიოიდი',
+    methadone: 'მეტადონის ჩანაცვლებითი თერაპია',
+    buprenorphine: 'ბუპრენორფინის ჩანაცვლებითი თერაპია',
+    active_use: 'ოპიოიდის აქტიური გამოყენება',
+    unknown: 'ოპიოიდის გამოყენება — დაუზუსტებელი'
+  };
+  if (!labels[ctx.type]) return state.patient?.opioid_tolerant ? 'ოპიოიდ-ტოლერანტული / ქრონიკული ოპიოიდი' : '';
+  let text = labels[ctx.type];
+  if (OPIOID_MAINTENANCE_CONTEXT_TYPES.has(ctx.type)) {
+    if (ctx.maintenanceDoseMgPerDay != null) {
+      const n = Number(ctx.maintenanceDoseMgPerDay);
+      text += ` ${Number.isInteger(n) ? n : n.toFixed(1)} მგ/დღე`;
+    }
+    if (ctx.todayDoseStatus === 'taken') text += ' · დღეს მიღებულია';
+    else if (ctx.todayDoseStatus === 'not_taken') text += ' · დღეს არ მიღებულა';
+    else if (ctx.todayDoseStatus === 'unknown') text += ' · დღევანდელი დოზა უცნობია';
+  }
+  return text;
+}
 function hvAnalgesiaRiskItems() {
   const p=state.patient||{};
   const defs=[
     ['crcl_low','CrCl/eGFR <30'],['crcl_mid','CrCl/eGFR 30–59'],['liver','ღვიძლის უკმ.'],['bleeding','სისხლდენის რისკი'],
-    ['gi_bleed','GI წყლული/სისხლდენა'],['aspirin_antiplatelet','Aspirin/ანტიპლატ.'],['osa','OSA'],['opioid_tolerant','ოპიოიდ-ტოლერანტული'],
+    ['gi_bleed','GI წყლული/სისხლდენა'],['aspirin_antiplatelet','Aspirin/ანტიპლატ.'],['osa','OSA'],
     ['delirium','მყიფეობა/დელირიუმი'],['seizure','კრუნჩხვის რისკი'],['glaucoma','გლაუკომა'],['urinary','შარდის შეკავება'],
     ['pregnancy','ორსულობა/ლაქტაცია'],['nsaid_contraindicated','NSAID CI']
   ];
-  return defs.filter(([k])=>!!p[k]).map(([,label])=>label);
+  const items = defs.filter(([k])=>!!p[k]).map(([,label])=>label);
+  const opioidContext = hvOpioidContextRiskText();
+  if (opioidContext) items.push(opioidContext);
+  return items;
 }
 function hvClinicalSnapshotText() {
   const parts=[];
@@ -31647,22 +33202,21 @@ function runAcceptanceTests() {
     !document.getElementById('pain-context-row') && !Object.prototype.hasOwnProperty.call(defaultState(), 'painContext') && !Object.prototype.hasOwnProperty.call(persisted32, 'painContext'),
     'row:' + !!document.getElementById('pain-context-row') + ' persisted:' + Object.prototype.hasOwnProperty.call(persisted32, 'painContext'));
 
-  // Test 33 — Opioid tolerance: TKA procedure evidence keeps ketamine out of routine advice while preserving the tolerance alert.
+  // Test 33 — v2.72.2: tolerance-specific Ketamine is patient-specific, never mislabeled as routine PROSPECT evidence.
   const tolerant = { ...defaultState().patient, opioid_tolerant: true };
   const rTol5 = computeNextBest({ surgery: 'tka', nrs: 5, given: defaultState().given, lastOpioidBucket: null, safety: defaultState().safety, patient: tolerant });
   const rStd5 = computeNextBest({ surgery: 'tka', nrs: 5, given: defaultState().given, lastOpioidBucket: null, safety: defaultState().safety, patient: defaultState().patient });
-  log('Test 33: tolerant TKA preserves underdose alert while ketamine is evidence-limited rather than routine',
-    !rTol5.advisory.some(a => a.name === 'Ketamine') && rTol5.evidenceAlternatives.some(a => a.name === 'Ketamine') &&
-    !rStd5.advisory.some(a => a.name === 'Ketamine') &&
-    rTol5.alerts.some(a => /tolerant|ტოლერანტ/i.test(a)) && !rStd5.alerts.some(a => /tolerant|ტოლერანტ/i.test(a)),
-    '');
+  log('Test 33: tolerant TKA surfaces Ketamine as patient-specific adjunct without changing procedure-specific PROSPECT routine evidence',
+    rTol5.patientSpecificAdjuncts.some(a => a.name === 'Ketamine') && !rTol5.advisory.some(a => a.name === 'Ketamine') && !rTol5.evidenceAlternatives.some(a => a.name === 'Ketamine') &&
+    !rStd5.patientSpecificAdjuncts.some(a => a.name === 'Ketamine') && rTol5.opioidContextDecision?.toleranceLikely===true,
+    JSON.stringify({patientSpecific:rTol5.patientSpecificAdjuncts.map(x=>x.name),evidence:rTol5.evidenceAlternatives.map(x=>x.name)}));
 
   // Test 34 — Tolerance does NOT weaken the >=3-boluses stop; reframing alert added
   const g34 = { ...defaultState().given, opioid: true, opioidCount: 3 };
   const rTolStop = computeNextBest({ surgery: 'open_hemicolectomy', nrs: 8, given: g34, lastOpioidBucket: '30-60', safety: freshSafeSafety(), patient: tolerant });
   log('Test 34: tolerant + >=3 boluses — opioid HOLD intact, no opioid ranked, escalation alert present',
     rTolStop.holds.length >= 1 && !rTolStop.ranked.some(x => /Fentanyl|Morphine/.test(x.name)) &&
-    rTolStop.alerts.some(a => /escalation|ესკალაცია/i.test(a)),
+    rTolStop.alerts.some(a => /reassessment|გადაფასება/i.test(a)),
     'holds:' + rTolStop.holds.length);
 
   // ---- v1.52 part-2 clinical engine tests ----
@@ -34533,7 +36087,7 @@ function runAcceptanceTests() {
   log('Test 485: Georgian persistent-pain disclosure avoids Trigger/STOP mixing and states the rule condition in natural Georgian', /ამ წესის ამოქმედების პირობაა/.test(note485) && !/(Trigger|STOP|ტრიგერი)/i.test(note485), note485);
 
   currentLang='ka'; renderAccessibilityLabels(); const footer486=document.getElementById('footer-branding')?.textContent||'';
-  log('Test 486: footer branding remains intentionally English in Georgian mode', footer486==='PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili', footer486);
+  log('Test 486: footer branding remains intentionally English in Georgian mode', footer486==='PACU Pain Management v2.75 | By Dr. Vasil Khachiashvili', footer486);
 
   // Tests 487–493 — v2.38 Phase 1 evidence provenance architecture.
   const sourceKeys487=Object.keys(prospectData);
@@ -34927,12 +36481,12 @@ function runAcceptanceTests() {
   const enTitle550=document.title;
   const enFooter550=document.getElementById('footer-branding')?.textContent||'';
   log('Test 550: current title/version is consistent and footer branding remains intentionally English in both languages',
-    kaTitle550.includes('v2.71 Stable') && enTitle550.includes('v2.71 Stable') &&
-    kaFooter550==='PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili' && enFooter550===kaFooter550,
+    kaTitle550.includes('v2.75') && enTitle550.includes('v2.75') &&
+    kaFooter550==='PACU Pain Management v2.75 | By Dr. Vasil Khachiashvili' && enFooter550===kaFooter550,
     JSON.stringify({kaTitle:kaTitle550,enTitle:enTitle550,kaFooter:kaFooter550,enFooter:enFooter550}));
 
   log('Test 551: current Stable metadata preserves the v19-compatible storage schema',
-    APP_VERSION==='2.71 Stable' && APP_RELEASE_CHANNEL==='stable' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
+    APP_VERSION==='2.75' && APP_RELEASE_CHANNEL==='development' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
     JSON.stringify({version:APP_VERSION,channel:APP_RELEASE_CHANNEL,stateKey:STATE_KEY,previousKey:PREVIOUS_STATE_KEY}));
 
   // Current-state round trip: Ward coarse history + structured regional record survive;
@@ -34961,7 +36515,7 @@ function runAcceptanceTests() {
 
   state=defaultState(); state.careSetting='ward'; state.surgery='tha'; state.nrs=5;
   const persisted554=buildPersistedState(1,'rc554-token',new Date().toISOString());
-  const allowedKeys554=['savedAt','sessionMeta','theme','careSetting','sessionStartedAt','surgery','nrs','behavioralPain','given','lastOpioidBucket','lastOpioidBucketSetAt','baseline','safety','chronicConditions','patient'];
+  const allowedKeys554=['savedAt','sessionMeta','theme','careSetting','sessionStartedAt','surgery','nrs','behavioralPain','given','lastOpioidBucket','lastOpioidBucketSetAt','baseline','safety','chronicConditions','opioidContext','patient'];
   const topKeys554=Object.keys(persisted554);
   log('Test 554: persisted clinical state stays allow-listed and excludes transient UI / handover DOM state',
     topKeys554.every(k=>allowedKeys554.includes(k)) && !('ui' in persisted554) && !('handover' in persisted554) && !('manualFields' in persisted554),
@@ -35668,7 +37222,7 @@ function runAcceptanceTests() {
     document.getElementById('given-edit-body')?.className||'missing');
 
   log('Test 688: release metadata preserves the v19-compatible storage schema',
-    APP_VERSION==='2.71 Stable' && APP_RELEASE_CHANNEL==='stable' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
+    APP_VERSION==='2.75' && APP_RELEASE_CHANNEL==='development' && STATE_KEY==='pacu_pain_state_v19' && PREVIOUS_STATE_KEY==='pacu_pain_state_v18',
     JSON.stringify({version:APP_VERSION,channel:APP_RELEASE_CHANNEL,stateKey:STATE_KEY,previousKey:PREVIOUS_STATE_KEY}));
 
   // Tests 689–691, 693–695 — v2.54 Phase 2 workflow compression + NRS-always-visible refinement.
@@ -36111,9 +37665,9 @@ function runAcceptanceTests() {
 
   // Tests 764–771 — v2.54 Ward Final QA / release-contract regression.
   state=defaultState(); currentLang='ka'; renderAll();
-  log('Test 764: current Stable build preserves v19 persistence and active UI-state compatibility keys',
-    APP_VERSION==='2.71 Stable' &&
-    APP_RELEASE_CHANNEL==='stable' &&
+  log('Test 764: current stable build preserves v19 persistence and active UI-state compatibility keys',
+    APP_VERSION==='2.75' &&
+    APP_RELEASE_CHANNEL==='development' &&
     STATE_KEY==='pacu_pain_state_v19' &&
     PREVIOUS_STATE_KEY==='pacu_pain_state_v18' &&
     Object.prototype.hasOwnProperty.call(defaultState().ui,'converterCollapsed') &&
@@ -36730,7 +38284,7 @@ function runAcceptanceTests() {
 
   currentLang='ka'; renderContextualAppIdentity();
   log('Test 865: v2.60.5 footer branding remains intentionally English in Georgian mode',
-    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili',
+    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.75 | By Dr. Vasil Khachiashvili',
     document.getElementById('footer-branding')?.textContent||'missing');
 
   const deadKa865=['given_text_unrecognized','given_check_basic','given_check_safety_group','baseline_note_nonprospect'];
@@ -36846,7 +38400,7 @@ function runAcceptanceTests() {
   state.careSetting='pacu'; currentLang='ka'; renderCareSetting(); renderContextualAppIdentity();
   log('Test 822: switching back to PACU restores PACU identity without changing product footer branding',
     document.getElementById('app-title')?.textContent==='PACU ტკივილის მართვა' &&
-    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.71 Stable | By Dr. Vasil Khachiashvili',
+    document.getElementById('footer-branding')?.textContent==='PACU Pain Management v2.75 | By Dr. Vasil Khachiashvili',
     JSON.stringify({header:document.getElementById('app-title')?.textContent,footer:document.getElementById('footer-branding')?.textContent}));
 
   state=defaultState(); currentLang='ka';
@@ -36869,8 +38423,8 @@ function runAcceptanceTests() {
   // Tests 825–834 — v2.54 Final Regression Phase 6.
   const release825=window.App?.releaseInfo?.() || {version:APP_VERSION,channel:APP_RELEASE_CHANNEL,stateKey:STATE_KEY};
   log('Test 825: v2.70 Stable release contract preserves the validated base while preserving v19 persistence compatibility',
-    APP_VERSION==='2.71 Stable' && APP_RELEASE_CHANNEL==='stable' && STATE_KEY==='pacu_pain_state_v19' &&
-    release825.version==='2.71 Stable' && release825.channel==='stable' && release825.stateKey==='pacu_pain_state_v19',
+    APP_VERSION==='2.75' && APP_RELEASE_CHANNEL==='development' && STATE_KEY==='pacu_pain_state_v19' &&
+    release825.version==='2.75' && release825.channel==='development' && release825.stateKey==='pacu_pain_state_v19',
     JSON.stringify(release825));
 
   state=defaultState(); currentLang='ka'; hvPrefillFromState({force:true});
@@ -37687,6 +39241,190 @@ function runAcceptanceTests() {
     !v271N5.ranked.some(x=>x.name==='Nefopam') && v271N5.nonRoutineFallback?.name==='Nefopam',
     JSON.stringify({ranked:v271N5.ranked.map(x=>x.name),fallback:v271N5.nonRoutineFallback,hierarchy:v271N5.debug.rescueHierarchy}));
 
+  // Tests 950–957 — v2.72.1 Phase 1 opioid-context model / localization / persistence.
+  const v272Default=defaultState();
+  log('Test 950: v2.72.1 default opioid context is explicit none with legacy tolerance false',
+    v272Default.opioidContext?.type==='none' && v272Default.opioidContext?.maintenanceDoseMgPerDay==null && v272Default.opioidContext?.todayDoseStatus==null && v272Default.patient.opioid_tolerant===false,
+    JSON.stringify({ctx:v272Default.opioidContext,tolerant:v272Default.patient.opioid_tolerant}));
+
+  state=defaultState(); state.opioidContext={type:'methadone',maintenanceDoseMgPerDay:80,todayDoseStatus:'taken'}; syncLegacyOpioidToleranceFlag(state);
+  const v272Persisted=buildPersistedState(1,'v272-test','2026-09-07T08:00:00.000Z');
+  hydrateRuntimeState(v272Persisted);
+  log('Test 951: v2.72.1 methadone context persists and rehydrates with dose/status intact',
+    state.opioidContext.type==='methadone' && state.opioidContext.maintenanceDoseMgPerDay===80 && state.opioidContext.todayDoseStatus==='taken' && state.patient.opioid_tolerant===true,
+    JSON.stringify({ctx:state.opioidContext,tolerant:state.patient.opioid_tolerant}));
+
+  hydrateRuntimeState({patient:{opioid_tolerant:true}});
+  log('Test 952: v2.72.1 legacy opioid_tolerant session migrates to prescribed chronic opioid context',
+    state.opioidContext.type==='chronic_prescribed' && state.patient.opioid_tolerant===true,
+    JSON.stringify({ctx:state.opioidContext,tolerant:state.patient.opioid_tolerant}));
+
+  hydrateRuntimeState({opioidContext:{type:'none'},patient:{opioid_tolerant:true}});
+  log('Test 953: v2.72.1 explicit new-context none overrides stale legacy boolean',
+    state.opioidContext.type==='none' && state.patient.opioid_tolerant===false,
+    JSON.stringify({ctx:state.opioidContext,tolerant:state.patient.opioid_tolerant}));
+
+  state=defaultState(); currentLang='ka'; state.opioidContext={type:'active_use',maintenanceDoseMgPerDay:null,todayDoseStatus:null}; syncLegacyOpioidToleranceFlag(state); renderOverridePanel();
+  const v272TypeSelect=document.getElementById('opioid-context-type');
+  const v272KaOptions=v272TypeSelect ? [...v272TypeSelect.options].map(o=>o.textContent) : [];
+  log('Test 954: v2.72.1 Georgian opioid-context UI exposes all six fully localized choices and retires the old checkbox',
+    v272KaOptions.length===6 && v272KaOptions.includes('მეტადონის ჩანაცვლებითი თერაპია') && v272KaOptions.includes('ოპიოიდის აქტიური გამოყენება') && !document.getElementById('factor-opioid_tolerant'),
+    JSON.stringify(v272KaOptions));
+
+  currentLang='en'; renderOverridePanel();
+  const v272EnOptions=[...(document.getElementById('opioid-context-type')?.options||[])].map(o=>o.textContent);
+  log('Test 955: v2.72.1 English parity exists for every opioid-context choice',
+    v272EnOptions.length===6 && v272EnOptions.includes('Methadone substitution therapy') && v272EnOptions.includes('Active opioid use'),
+    JSON.stringify(v272EnOptions));
+
+  currentLang='ka'; state.opioidContext={type:'buprenorphine',maintenanceDoseMgPerDay:16,todayDoseStatus:'unknown'}; syncLegacyOpioidToleranceFlag(state); renderOverridePanel();
+  log('Test 956: v2.72.1 substitution-therapy detail fields render only for maintenance contexts',
+    !!document.getElementById('opioid-context-maintenance-dose') && !!document.getElementById('opioid-context-today-dose') && document.getElementById('opioid-context-maintenance-dose')?.value==='16',
+    JSON.stringify(state.opioidContext));
+
+  const v272Hv=hvOpioidContextRiskText();
+  log('Test 957: v2.72.1 handover snapshot carries specific Georgian opioid context with dose/status',
+    /ბუპრენორფინის ჩანაცვლებითი თერაპია/.test(v272Hv) && /16 მგ\/დღე/.test(v272Hv) && /დღევანდელი დოზა უცნობია/.test(v272Hv),
+    v272Hv);
+
+  // ---- v2.72.2 Phase 2 opioid-context clinical-engine regression ----
+  currentLang='ka';
+  const v2722Safe = freshSafeSafety();
+  const v2722Patient = { ...defaultState().patient, ageYears:45, weightKg:80 };
+  const v2722Given = defaultState().given;
+  v2722Given.medicationCheckStatus='selected';
+  const v2722MethCtx = { type:'methadone', maintenanceDoseMgPerDay:80, todayDoseStatus:'taken' };
+  const v2722Meth = computeNextBest({ surgery:'open_hemicolectomy', nrs:8, given:v2722Given, ledger:[], lastOpioidBucket:null, safety:v2722Safe, patient:v2722Patient, opioidContext:v2722MethCtx, careSetting:'pacu' });
+  const v2722MethOpioid = v2722Meth.ranked.flatMap(x => x.combination ? (x.parts||[]) : [x]).find(x => /Morphine|Fentanyl/.test(x.name||''));
+  log('Test 958: v2.72.2 methadone + NRS8 uses tolerance-aware physician titration and preserves acute analgesia',
+    v2722Meth.opioidContextDecision?.type==='methadone' && v2722Meth.maintenanceTherapy?.type==='methadone' && v2722MethOpioid?.opioidToleranceAware===true && v2722MethOpioid?.dose===t('opioid_titration_dose') && v2722Meth.holds.length===0,
+    JSON.stringify({ctx:v2722Meth.opioidContextDecision,maintenance:v2722Meth.maintenanceTherapy,opioid:v2722MethOpioid,holds:v2722Meth.holds}));
+
+  const v2722MethUnknown = computeNextBest({ surgery:'open_hemicolectomy', nrs:8, given:defaultState().given, ledger:[], lastOpioidBucket:null, safety:v2722Safe, patient:v2722Patient, opioidContext:{type:'methadone',maintenanceDoseMgPerDay:null,todayDoseStatus:'unknown'}, careSetting:'pacu' });
+  log('Test 959: unknown methadone maintenance dose/status does not create an acute-analgesia HOLD',
+    v2722MethUnknown.maintenanceTherapy?.type==='methadone' && /არ უნდა შეჩერდეს/.test(v2722MethUnknown.maintenanceTherapy?.doseText||'') && v2722MethUnknown.holds.length===0,
+    JSON.stringify({maintenance:v2722MethUnknown.maintenanceTherapy,holds:v2722MethUnknown.holds}));
+
+  const v2722MethStop = computeNextBest({ surgery:'open_hemicolectomy', nrs:8, given:defaultState().given, ledger:[], lastOpioidBucket:null, safety:{...v2722Safe,rr:8}, patient:v2722Patient, opioidContext:v2722MethCtx, careSetting:'pacu' });
+  log('Test 960: methadone context never weakens RR<10 global STOP',
+    v2722MethStop.debug.globalStop==='rr_low' && v2722MethStop.stops.some(x=>/RR|სუნთქვ/i.test(x)) && v2722MethStop.ranked.length===0,
+    JSON.stringify({stop:v2722MethStop.debug.globalStop,stops:v2722MethStop.stops}));
+
+  const v2722Bup = computeNextBest({ surgery:'open_hemicolectomy', nrs:8, given:defaultState().given, ledger:[], lastOpioidBucket:null, safety:v2722Safe, patient:v2722Patient, opioidContext:{type:'buprenorphine',maintenanceDoseMgPerDay:16,todayDoseStatus:'taken'}, careSetting:'pacu' });
+  log('Test 961: buprenorphine pathway recommends continuation and introduces no conversion algorithm',
+    v2722Bup.maintenanceTherapy?.type==='buprenorphine' && /რუტინული შეწყვეტა.+არ არის რეკომენდებული/.test(v2722Bup.maintenanceTherapy?.main||'') && !/equiv|ექვივ|convert|კონვერტ/i.test(JSON.stringify(v2722Bup.maintenanceTherapy)),
+    JSON.stringify(v2722Bup.maintenanceTherapy));
+
+  const v2722Active = computeNextBest({ surgery:'open_hemicolectomy', nrs:8, given:defaultState().given, ledger:[], lastOpioidBucket:null, safety:v2722Safe, patient:v2722Patient, opioidContext:{type:'active_use'}, careSetting:'pacu' });
+  const v2722ActiveOpioid = v2722Active.ranked.flatMap(x => x.combination ? (x.parts||[]) : [x]).find(x => /Morphine|Fentanyl/.test(x.name||''));
+  log('Test 962: active opioid use uses individualized titration with no automatic dose multiplier',
+    v2722ActiveOpioid?.opioidToleranceAware===true && v2722ActiveOpioid?.dose===t('opioid_titration_dose') && !/[×x]\s*[23]/i.test(v2722ActiveOpioid?.dose||''),
+    JSON.stringify(v2722ActiveOpioid));
+
+  const v2722TkaTol = computeNextBest({ surgery:'tka', nrs:5, given:defaultState().given, ledger:[], lastOpioidBucket:null, safety:v2722Safe, patient:v2722Patient, opioidContext:{type:'chronic_prescribed'}, careSetting:'pacu' });
+  log('Test 963: tolerance-specific Ketamine remains patient-specific even when TKA procedure evidence does not recommend routine Ketamine',
+    v2722TkaTol.patientSpecificAdjuncts.some(x=>x.name==='Ketamine' && x.reason==='opioid_tolerance') && !v2722TkaTol.evidenceAlternatives.some(x=>x.name==='Ketamine') && !v2722TkaTol.advisory.some(x=>x.name==='Ketamine'),
+    JSON.stringify({patientSpecific:v2722TkaTol.patientSpecificAdjuncts,evidence:v2722TkaTol.evidenceAlternatives.map(x=>x.name)}));
+
+  const v2722Unknown = computeNextBest({ surgery:'open_hemicolectomy', nrs:8, given:defaultState().given, ledger:[], lastOpioidBucket:null, safety:v2722Safe, patient:v2722Patient, opioidContext:{type:'unknown'}, careSetting:'pacu' });
+  const v2722UnknownOpioid = v2722Unknown.ranked.flatMap(x => x.combination ? (x.parts||[]) : [x]).find(x => /Morphine|Fentanyl/.test(x.name||''));
+  log('Test 964: unresolved opioid history warns conservatively but is not silently treated as established tolerance',
+    v2722Unknown.opioidContextDecision?.type==='unknown' && v2722Unknown.alerts.some(x=>/დაუზუსტებელია/.test(x)) && v2722UnknownOpioid?.opioidToleranceAware!==true,
+    JSON.stringify({decision:v2722Unknown.opioidContextDecision,opioid:v2722UnknownOpioid,alerts:v2722Unknown.alerts}));
+
+  const v2722Now=Date.now();
+  const v2722OihLedger=[
+    {id:'v2722m1',med:'Morphine',mg:3,dose:3,unit:'mg',route:'IV',at:new Date(v2722Now-50*60000).toISOString(),source:'pacu',origin:LEDGER_ORIGIN_PACU,exact:true,doseKnown:true,timeKnown:true,response:'insufficient'},
+    {id:'v2722o1',med:'Opioid',mg:null,at:new Date(v2722Now-50*60000).toISOString(),source:'pacu',origin:LEDGER_ORIGIN_PACU,linkId:'v2722m1',namedMed:'Morphine',exactDose:3,exactUnit:'mg',route:'IV'},
+    {id:'v2722m2',med:'Morphine',mg:3,dose:3,unit:'mg',route:'IV',at:new Date(v2722Now-20*60000).toISOString(),source:'pacu',origin:LEDGER_ORIGIN_PACU,exact:true,doseKnown:true,timeKnown:true,response:'insufficient'},
+    {id:'v2722o2',med:'Opioid',mg:null,at:new Date(v2722Now-20*60000).toISOString(),source:'pacu',origin:LEDGER_ORIGIN_PACU,linkId:'v2722m2',namedMed:'Morphine',exactDose:3,exactUnit:'mg',route:'IV'},
+    {id:'v2722p',med:'Paracetamol',mg:1000,dose:1000,unit:'mg',route:'IV',at:new Date(v2722Now-30*60000).toISOString(),source:'pacu',origin:LEDGER_ORIGIN_PACU,exact:true,doseKnown:true,timeKnown:true,response:'insufficient'}
+  ];
+  const v2722Oih = computeNextBest({ surgery:'open_hemicolectomy', nrs:8, given:{...defaultState().given,doseLedger:v2722OihLedger,opioid:true,opioidCount:2,paracetamol:true,paracetamolCount:1}, ledger:v2722OihLedger, lastOpioidBucket:null, safety:v2722Safe, patient:v2722Patient, opioidContext:{type:'chronic_prescribed'}, careSetting:'pacu' });
+  log('Test 965: repeated opioid exposure + documented multimodal failure triggers non-diagnostic OIH/tolerance advisory',
+    v2722Oih.escalation?.active===true && v2722Oih.opioidHyperalgesiaAdvisory?.diagnostic===false && v2722Oih.debug.possibleOihAdvisory===true,
+    JSON.stringify({escalation:v2722Oih.escalation,oih:v2722Oih.opioidHyperalgesiaAdvisory,exposure:v2722Oih.debug.opioidExposure}));
+
+  const v2722KaCard = buildOpioidSpecialContextCard(v2722Meth);
+  const v2722KaAdjunct = buildPatientSpecificAdjunctCard(v2722Meth);
+  const v2722KaText = [v2722KaCard?.textContent || '', v2722KaAdjunct?.textContent || ''].join(' ');
+  log('Test 966: Georgian opioid-context recommendation surface is fully localized',
+    /ოპიოიდ-ტოლერანტული პაციენტი/.test(v2722KaText) && /ჩანაცვლებითი თერაპია/.test(v2722KaText) && /მეტადონი 80 მგ\/დღე/.test(v2722KaText) && /პაციენტზე მორგებული დამატებითი ანალგეზია/.test(v2722KaText) && /კეტამინი/.test(v2722KaText) && !/Substitution therapy|Patient-specific|Physician-directed|Today.s dose/.test(v2722KaText),
+    v2722KaText);
+
+  currentLang='en';
+  const v2722En = computeNextBest({ surgery:'open_hemicolectomy', nrs:8, given:defaultState().given, ledger:[], lastOpioidBucket:null, safety:v2722Safe, patient:v2722Patient, opioidContext:v2722MethCtx, careSetting:'pacu' });
+  const v2722EnCard = buildOpioidSpecialContextCard(v2722En);
+  const v2722EnAdjunct = buildPatientSpecificAdjunctCard(v2722En);
+  const v2722EnText = [v2722EnCard?.textContent || '', v2722EnAdjunct?.textContent || ''].join(' ');
+  log('Test 967: English parity exists for the complete Phase-2 opioid-context surface',
+    /Opioid-tolerant patient/.test(v2722EnText) && /Substitution therapy/.test(v2722EnText) && /Methadone 80 mg\/day/.test(v2722EnText) && /Patient-specific adjunct analgesia/.test(v2722EnText) && /Ketamine/.test(v2722EnText),
+    v2722EnText);
+  currentLang='ka';
+
+  const v2722Naive = computeNextBest({ surgery:'open_hemicolectomy', nrs:8, given:defaultState().given, ledger:[], lastOpioidBucket:null, safety:v2722Safe, patient:v2722Patient, opioidContext:{type:'none'}, careSetting:'pacu' });
+  const v2722NaiveOpioid = v2722Naive.ranked.flatMap(x => x.combination ? (x.parts||[]) : [x]).find(x => /Morphine|Fentanyl/.test(x.name||''));
+  log('Test 968: explicit no-chronic-opioid context preserves the ordinary opioid-naive dose pathway',
+    !v2722Naive.opioidContextDecision && v2722NaiveOpioid?.opioidToleranceAware!==true && v2722NaiveOpioid?.dose!==t('opioid_titration_dose'),
+    JSON.stringify(v2722NaiveOpioid));
+
+  const v2722TolPrimary = v2722Meth.ranked[0];
+  const v2722TolParts = v2722TolPrimary?.combination ? (v2722TolPrimary.parts||[]) : [v2722TolPrimary];
+  log('Test 969: tolerance-aware opioid has no direct fixed-dose administration recorder while fixed non-opioid combo component remains recordable',
+    v2722TolParts.some(x=>/Morphine|Fentanyl/.test(x?.name||'') && x.directRecordAllowed===false) && (!v2722TolPrimary?.combination || v2722TolParts.some(x=>x?.name==='Ketorolac' && x.directRecordAllowed!==false)),
+    JSON.stringify(v2722TolParts));
+
+  // ---- v2.73.2 Phase 2 Patient Factors component-polish regression ----
+  currentLang='ka';
+  state=defaultState();
+  state.opioidContext={type:'methadone',maintenanceDoseMgPerDay:80,todayDoseStatus:'taken'};
+  syncLegacyOpioidToleranceFlag(state);
+  state.ui.factorsCollapsed=false;
+  state.ui.catCollapsed.cat_opioid_context=false;
+  renderOverridePanel();
+  const v2732Choices=[...document.querySelectorAll('input[name="opioid-context-type-choice"]')];
+  log('Test 970: v2.73.2 opioid-context editor exposes six accessible single-choice controls',
+    v2732Choices.length===6 && v2732Choices.filter(x=>x.checked).length===1 && v2732Choices.find(x=>x.checked)?.value==='methadone',
+    JSON.stringify(v2732Choices.map(x=>({value:x.value,checked:x.checked}))));
+
+  const v2732Native=document.getElementById('opioid-context-type');
+  log('Test 971: v2.73.2 retains the native opioid-context select as a hidden compatibility hook',
+    !!v2732Native && v2732Native.options.length===6 && v2732Native.classList.contains('visually-hidden'),
+    v2732Native?.className||'missing');
+
+  const v2732Today=[...document.querySelectorAll('input[name="opioid-context-today-dose-choice"]')];
+  log('Test 972: v2.73.2 maintenance subcard keeps dose and today-dose state visible without changing stored semantics',
+    !!document.querySelector('.opioid-context-maintenance-card') && document.getElementById('opioid-context-maintenance-dose')?.value==='80' && v2732Today.length===3 && v2732Today.find(x=>x.checked)?.value==='taken' && state.opioidContext.maintenanceDoseMgPerDay===80,
+    JSON.stringify({ctx:state.opioidContext,today:v2732Today.map(x=>({value:x.value,checked:x.checked}))}));
+
+  currentLang='en';
+  state.opioidContext={type:'buprenorphine',maintenanceDoseMgPerDay:16,todayDoseStatus:'unknown'};
+  syncLegacyOpioidToleranceFlag(state);
+  renderOverridePanel();
+  const v2732EnText=document.querySelector('.opioid-context-card')?.textContent||'';
+  log('Test 973: v2.73.2 polished opioid-context editor keeps full English parity',
+    /Opioid context/.test(v2732EnText) && /Buprenorphine substitution therapy/.test(v2732EnText) && /Substitution-therapy details/.test(v2732EnText) && /Daily buprenorphine dose/.test(v2732EnText) && /Unknown/.test(v2732EnText),
+    v2732EnText);
+  currentLang='ka';
+
+  state=defaultState();
+  state.opioidContext={type:'methadone',maintenanceDoseMgPerDay:80,todayDoseStatus:'taken'};
+  syncLegacyOpioidToleranceFlag(state);
+  state.ui.factorsCollapsed=false;
+  state.ui.catCollapsed.cat_opioid_context=false;
+  renderOverridePanel();
+  const v274Featured=document.querySelector('.override-category-featured > .opioid-context-card');
+  log('Test 974: v2.74 promotes opioid context to a dedicated full-width featured clinical card',
+    !!v274Featured && v274Featured.classList.contains('is-expanded') && !document.querySelector('.override-category-column .opioid-context-card'),
+    v274Featured?.className||'missing');
+  log('Test 975: v2.74 opioid header avoids a redundant selected-count badge',
+    !!v274Featured && !v274Featured.querySelector('.override-cat-header-side .patient-factors-count'),
+    v274Featured?.querySelector('.override-cat-header-side')?.textContent||'missing');
+  const v274Additional=document.querySelector('.override-categories-additional');
+  log('Test 976: v2.74 keeps documentation-only history in the secondary information group',
+    !!v274Additional && !!v274Additional.querySelector('.documentation-only') && !document.querySelector('.factor-category-group-clinical .documentation-only'),
+    v274Additional?.textContent||'missing');
+
   state=stateBefore550; currentLang=langBefore550; renderAll();
 
   const passed = tests.filter(t => t.pass).length;
@@ -37936,7 +39674,7 @@ function init() {
   window.App.getSessionOwnershipStatus = getSessionOwnershipStatus;
   window.App.printPreflight = () => hvLastPrintPreflight;
   maybeRunSelfTest();
-  debugLog('[PACU] v2.71 Stable build initialized. Run App.runAcceptanceTests(), App.runLayoutSmokeTests(), or add ?selftest=1 to QA.');
+  debugLog('[PACU] v2.75 build initialized. Run App.runAcceptanceTests(), App.runLayoutSmokeTests(), or add ?selftest=1 to QA.');
 }
 
 return { init };
@@ -37944,13 +39682,6 @@ return { init };
 })();
 
 App.init();
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function () {
-    navigator.serviceWorker.register('sw.js').catch(function () {});
-  });
-}
 </script>
 </body>
 </html>
