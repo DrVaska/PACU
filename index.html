@@ -34,10 +34,8 @@
 })();
 </script>
 <meta name="color-scheme" content="light dark">
-<title>PACU ტკივილის მართვა v2.75 | დოქტორი ვასილ ხაჩიაშვილი</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Georgian:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<title>PACU ტკივილის მართვა v2.75 | Dr. Vasil Khachiashvili</title>
+<link href="fonts/fonts.css" rel="stylesheet">
 <style>
 :root {
   /* Colors */
@@ -12214,6 +12212,109 @@ section[aria-labelledby="h-given"] .given-summary-row {
   background: rgba(245,158,11,.035);
 }
 
+
+
+/* ---------- v2.75.1 MOBILE PRIMARY RECOMMENDATION CARD HEIGHT FIX ----------
+   The actionable mobile recommendation card must hug its content. Some real
+   bedside states (eg, Metamizole-first after baseline completion) were leaving
+   visible vertical slack and duplicate-looking footer spacing on small screens.
+   Presentation only: no ranking, dose, timing or safety semantics change. */
+.rec-first .med-name-wrapper:empty,
+.rec-first .rec-action-label:empty,
+.rec-first .med-dose:empty,
+.rec-first .med-dose-note:empty,
+.rec-first .med-why:empty,
+.rec-first .med-reassess:empty,
+.rec-first .med-interval:empty,
+.rec-first .rec-opioid-context-inline:empty,
+.rec-first .rec-conditional-note:empty,
+.rec-first .rec-given-actions:empty,
+.rec-first .rec-first-footer:empty {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .rec-first {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 8px;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .rec-first-badge-row,
+  .rec-first-main,
+  .rec-opioid-context-inline,
+  .rec-conditional-note,
+  .rec-first-footer,
+  .rec-given-actions,
+  .rec-morphine-more-dose-weight,
+  .combo-alongside-strip,
+  .opioid-safety-summary.rec-integrated-safety-summary {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .rec-first-main {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  .rec-first .med-name-wrapper {
+    display: inline-flex;
+    margin: 0;
+  }
+
+  .rec-dose-block,
+  .rec-first.opioid-tolerance-primary .rec-dose-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .rec-first .med-name,
+  .rec-dose-block .med-dose {
+    margin: 0 !important;
+  }
+
+  .rec-dose-block .med-dose-note,
+  .med-dose-note,
+  .med-dose-note-sm {
+    margin: 0 !important;
+  }
+
+  .rec-first-footer {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+    margin-top: 0 !important;
+    padding-top: 8px;
+  }
+
+  .rec-first .med-reassess,
+  .rec-first .med-interval {
+    width: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .rec-given-actions {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .rec-mark-given-btn {
+    max-width: 100%;
+  }
+}
+
 </style>
 
 <style id="hv-styles">
@@ -13727,6 +13828,13 @@ header.app-header.controls-header {
   .header-controls > .lang-toggle-single #btn-lang-toggle { height:38px !important; min-height:38px !important; }
 }
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="PACU ტკივილი">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
 </head>
 
 <body>
@@ -13749,7 +13857,7 @@ header.app-header.controls-header {
   <!-- Page heading + compact controls -->
   <div class="page-heading" aria-label="Application title">
     <div class="brand-wrapper">
-      <div class="medical-logo" role="img" aria-label="DrX · PACU ტკივილის მართვა v2.75 · დოქტორი ვასილ ხაჩიაშვილი">
+      <div class="medical-logo" role="img" aria-label="DrX · PACU ტკივილის მართვა v2.75 · Dr. Vasil Khachiashvili">
         <svg class="logo-img logo-full" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="-12 16 192 88"><g fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"><path d="M0 90 V30 H16 A30 30 0 0 1 16 90 Z"/><g transform="translate(69,0)"><path d="M0 48 V90"/><path d="M0 62 A14 14 0 0 1 14 48"/></g><path d="M118.1 69.9 L98 90"/><path d="M137.9 69.9 L158 90"/></g><path d="M98 30 L128 60 L158 30" stroke="#C8102E" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
         <svg class="logo-img logo-mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="18 18 84 84"><g stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"><path d="M50.1 69.9 L30 90" stroke="currentColor"/><path d="M69.9 69.9 L90 90" stroke="currentColor"/><path d="M30 30 L60 60 L90 30" stroke="#C8102E"/></g></svg>
       </div>
@@ -25221,13 +25329,13 @@ function getContextualAppIdentity() {
     return ward
       ? {
           title: 'პალატის ტკივილის მართვა',
-          documentTitle: `პალატის ტკივილის მართვა v${APP_VERSION} | დოქტორი ვასილ ხაჩიაშვილი`,
-          logoLabel: `DrX · პალატის ტკივილის მართვა v${APP_VERSION} · დოქტორი ვასილ ხაჩიაშვილი`
+          documentTitle: `პალატის ტკივილის მართვა v${APP_VERSION} | Dr. Vasil Khachiashvili`,
+          logoLabel: `DrX · პალატის ტკივილის მართვა v${APP_VERSION} · Dr. Vasil Khachiashvili`
         }
       : {
           title: 'PACU ტკივილის მართვა',
-          documentTitle: `PACU ტკივილის მართვა v${APP_VERSION} | დოქტორი ვასილ ხაჩიაშვილი`,
-          logoLabel: `DrX · PACU ტკივილის მართვა v${APP_VERSION} · დოქტორი ვასილ ხაჩიაშვილი`
+          documentTitle: `PACU ტკივილის მართვა v${APP_VERSION} | Dr. Vasil Khachiashvili`,
+          logoLabel: `DrX · PACU ტკივილის მართვა v${APP_VERSION} · Dr. Vasil Khachiashvili`
         };
   }
   return ward
@@ -39682,6 +39790,13 @@ return { init };
 })();
 
 App.init();
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
 </script>
 </body>
 </html>

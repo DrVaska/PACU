@@ -2,7 +2,7 @@
    Navigation: network first, so a new upload appears next time the phone is online.
    Everything else: cache first, so fonts and icons never wait on the network. */
 
-const CACHE = 'pacu-v3';
+const CACHE = 'pacu-v5';
 
 const PRECACHE = [
   './',
